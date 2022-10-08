@@ -1,9 +1,8 @@
 package art.tidsear.pumpkingamemode;
 
 /*
-- INIT
-Give the players their roles, adventure mode, starting items.
-Have PVP disabled.
+- IDLE
+Gamemode has either ended or not begun
 
 - COUNTDOWN
 From like 5 seconds, gives the players time to meme on each other,
@@ -34,7 +33,7 @@ until it is reset to INIT for a new game.
 
  */
 public enum PKState {
-    INIT,
+    IDLE,
     COUNTDOWN,
     LOCKED_PUMPKIN,
     UNLOCKED_PUMPKIN,

@@ -8,9 +8,8 @@ package art.tidsear.pumpkingamemode;
 // ie where players can spawn randomly, where the pumpkin king can spawn, etc
 // Meant for 4 crew players, 1 pumpkin king
 public interface PKGameMode {
-    public void Init();
-    // Reset the gamemode
-    public void Reset();
+    // Do setup, reset everything, etc
+    public void StartUp();
 
     public void Update();
     //Init

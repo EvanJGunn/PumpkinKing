@@ -26,7 +26,7 @@ public class CommandStartPKG extends CommandBase {
     public void processCommand(ICommandSender s, String[] args) {
         System.out.println("Command Start PK Gamemode");
 
-        PumpkinKingMod.pkGameMode.Init();
+        PumpkinKingMod.pkGameMode.StartUp();
         s.addChatMessage(new ChatComponentText("Ready or not..."));
     }
 }
