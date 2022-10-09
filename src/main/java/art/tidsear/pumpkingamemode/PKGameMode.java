@@ -1,5 +1,7 @@
 package art.tidsear.pumpkingamemode;
 
+import org.lwjgl.util.vector.Vector3f;
+
 // There should be no interaction between the PKGameMode and
 // minecraft directly. Any calls to modify the minecraft state
 // should be made using passed in objects or other interfaces (commands?).
@@ -12,9 +14,13 @@ public interface PKGameMode {
     public void StartUp();
 
     public void Update();
-    //Init
-    //DoCountDown
-    //Reset
-    //Update
+
+    // TODO We should never add duplicates for spawns
+    public void AddLobbySpawn(Vector3f pos);
+    public void AddPlayerSpawn(Vector3f pos);
+    public void AddPKSpawn(Vector3f pos);
+    public void RemoveLobbySpawn(Vector3f pos);
+    public void RemovePlayerSpawn(Vector3f pos);
+    public void RemovePKSpawn(Vector3f pos);
 }
 

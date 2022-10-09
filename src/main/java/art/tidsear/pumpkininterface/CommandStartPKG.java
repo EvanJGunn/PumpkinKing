@@ -29,4 +29,9 @@ public class CommandStartPKG extends CommandBase {
         PumpkinKingMod.pkGameMode.StartUp();
         s.addChatMessage(new ChatComponentText("Ready or not..."));
     }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 2;
+    }
 }

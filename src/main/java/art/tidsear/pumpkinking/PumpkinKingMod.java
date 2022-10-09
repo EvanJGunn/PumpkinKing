@@ -33,14 +33,10 @@ public class PumpkinKingMod
 
     @EventHandler
     public void onServerStart(FMLServerStartingEvent event) {
-        System.out.println("SERVER STARTED EVENT");
-
         // Register PK related server commands
         MinecraftServer server = MinecraftServer.getServer();
         ICommandManager icm = server.getCommandManager();
         ServerCommandManager scm = (ServerCommandManager) icm;
         scm.registerCommand(new CommandStartPKG());
     }
-
-
 }

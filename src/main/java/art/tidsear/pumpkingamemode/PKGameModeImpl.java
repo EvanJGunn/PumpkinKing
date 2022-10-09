@@ -49,6 +49,13 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public void StartUp() {
         icms.sendMessageAll("Starting PK Game Mode");
+
+        // TODO do all resets here, lists, etc
+        crew.clear();
+        pks.clear();
+
+
+
         allPlayers = icms.getServerPlayers();
         icms.sendMessageAll(String.format("Players found: %s", allPlayers.toString()));
 
@@ -101,5 +108,69 @@ public class PKGameModeImpl implements PKGameMode{
             case BOSS_BATTLE:
                 break;
         }
+    }
+
+    @Override
+    public void AddLobbySpawn(Vector3f pos) {
+        for (int i = 0; i < lobbySpawns.size(); i++) {
+            if (v3feql(lobbySpawns.get(i),pos)) return;
+        }
+        lobbySpawns.add(pos);
+    }
+
+    @Override
+    public void AddPlayerSpawn(Vector3f pos) {
+        for (int i = 0; i < playerSpawns.size(); i++) {
+            if (v3feql(playerSpawns.get(i),pos)) return;
+        }
+        playerSpawns.add(pos);
+    }
+
+    @Override
+    public void AddPKSpawn(Vector3f pos) {
+        for (int i = 0; i < pkSpawns.size(); i++) {
+            if (v3feql(pkSpawns.get(i),pos)) return;
+        }
+        pkSpawns.add(pos);
+    }
+
+    @Override
+    public void RemoveLobbySpawn(Vector3f pos) {
+        for (int i = 0; i < lobbySpawns.size(); i++) {
+            if (v3feql(lobbySpawns.get(i),pos)) {
+                lobbySpawns.remove(i);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void RemovePlayerSpawn(Vector3f pos) {
+        for (int i = 0; i < playerSpawns.size(); i++) {
+            if (v3feql(playerSpawns.get(i),pos)) {
+                playerSpawns.remove(i);
+                return;
+            }
+        }
+    }
+
+    @Override
+    public void RemovePKSpawn(Vector3f pos) {
+        for (int i = 0; i < pkSpawns.size(); i++) {
+            if (v3feql(pkSpawns.get(i),pos)) {
+                pkSpawns.remove(i);
+                return;
+            }
+        }
+    }
+
+    // Never trust .equals, also TODO put in a util
+    private boolean v3feql(Vector3f v1, Vector3f v2) {
+        if(v1.getX() == v2.getX()) {
+            if(v1.getZ() == v2.getZ()) {
+                return v1.getY() == v2.getY();
+            }
+        }
+        return false;
     }
 }

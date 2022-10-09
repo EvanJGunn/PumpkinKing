@@ -31,6 +31,9 @@ public class InternalCommandsImpl implements InternalCommands{
 
     @Override
     public void sendMessageAll(String message) {
-        MinecraftServer.getServer().addChatMessage(new ChatComponentText(message));
+        List<EntityPlayerMP> playerEntities = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+        for (EntityPlayerMP p : playerEntities) {
+            p.addChatMessage(new ChatComponentText(message));
+        }
     }
 }
