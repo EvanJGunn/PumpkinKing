@@ -60,8 +60,6 @@ public class PKGameModeImpl implements PKGameMode{
         crew.clear();
         pks.clear();
 
-
-
         allPlayers = icms.getServerPlayers();
         icms.sendMessageAll(String.format("Players found: %s", allPlayers.toString()));
 
@@ -126,7 +124,27 @@ public class PKGameModeImpl implements PKGameMode{
             return;
         }
         icms.sendMessageAll("Let the hunt begin");
+
+        spawnAllPlayers();
         pkState = PKState.LOCKED_PUMPKIN;
+    }
+
+    // TODO this should be callable via a command block
+    public void SpawnInLobby() {
+        for (int i = 0; i < allPlayers.size(); i++) {
+            icms.teleportPlayer(allPlayers.get(i), (Vector3f)getRandListItem(lobbySpawns));
+        }
+    }
+
+    private void spawnAllPlayers() {
+        for (int i = 0; i < allPlayers.size(); i++) {
+            icms.teleportPlayer(allPlayers.get(i), (Vector3f)getRandListItem(playerSpawns));
+        }
+    }
+
+    private Object getRandListItem(List list) {
+        int randIndex = randGen.nextInt(list.size());
+        return list.get(randIndex);
     }
 
     @Override

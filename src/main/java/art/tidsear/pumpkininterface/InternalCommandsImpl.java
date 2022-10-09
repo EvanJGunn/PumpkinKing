@@ -26,7 +26,12 @@ public class InternalCommandsImpl implements InternalCommands{
 
     @Override
     public void teleportPlayer(String playerName, Vector3f newPos) {
-
+        EntityPlayerMP playerEntity = playerNameToEntity(playerName);
+        if (playerEntity == null) {
+            System.out.println("Issue teleporting player, entity conversion was null");
+            return;
+        }
+        playerEntity.setPosition(newPos.getX(), newPos.getY(), newPos.getZ());
     }
 
     @Override
@@ -35,5 +40,16 @@ public class InternalCommandsImpl implements InternalCommands{
         for (EntityPlayerMP p : playerEntities) {
             p.addChatMessage(new ChatComponentText(message));
         }
+    }
+
+    // Probably belongs somewhere else
+    private EntityPlayerMP playerNameToEntity(String playerName) {
+        List<EntityPlayerMP> playerEntities = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+        for (EntityPlayerMP p : playerEntities) {
+            if (p.getDisplayName() == playerName) {
+                return p;
+            }
+        }
+        return null;
     }
 }
