@@ -2,8 +2,7 @@ package art.tidsear.pumpkinking;
 
 import art.tidsear.pumpkingamemode.PKGameMode;
 import art.tidsear.pumpkingamemode.PKGameModeImpl;
-import art.tidsear.pumpkininterface.CommandStartPKG;
-import art.tidsear.pumpkininterface.InternalCommandsImpl;
+import art.tidsear.pumpkininterface.*;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import net.minecraft.command.ICommandManager;
@@ -38,5 +37,8 @@ public class PumpkinKingMod
         ICommandManager icm = server.getCommandManager();
         ServerCommandManager scm = (ServerCommandManager) icm;
         scm.registerCommand(new CommandStartPKG());
+        scm.registerCommand(new CommandLobbySpawn());
+        scm.registerCommand(new CommandPKSpawn());
+        scm.registerCommand(new CommandPlayerSpawn());
     }
 }
