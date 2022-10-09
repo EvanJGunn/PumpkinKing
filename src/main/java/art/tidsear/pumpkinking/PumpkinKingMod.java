@@ -1,10 +1,14 @@
 package art.tidsear.pumpkinking;
 
+import art.tidsear.pumpkingamemode.PKGMTickEvent;
 import art.tidsear.pumpkingamemode.PKGameMode;
 import art.tidsear.pumpkingamemode.PKGameModeImpl;
 import art.tidsear.pumpkininterface.*;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommand;
 import net.minecraft.command.ServerCommandManager;
@@ -40,5 +44,7 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandLobbySpawn());
         scm.registerCommand(new CommandPKSpawn());
         scm.registerCommand(new CommandPlayerSpawn());
+
+        FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
     }
 }

@@ -10,4 +10,6 @@ public interface InternalCommands {
 
     public void sendMessageAll(String message);
     public void teleportPlayer(String playerName, Vector3f newPos);
+
+    // TODO setRedstoneBlock
 }

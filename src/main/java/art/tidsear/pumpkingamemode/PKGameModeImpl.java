@@ -27,6 +27,12 @@ public class PKGameModeImpl implements PKGameMode{
     private List<String> pks;
     private List<String> crew;
 
+    // Countdown, amount is in seconds and is multiplied later to get milliseconds
+    private final float countdownAmount = 10;
+    private long targetCountDownTime;
+
+    // TODO need to add a timer for locked and unlocked pumpking, in case the players never reach the boss battle
+
     // Dependency injection makes testing easier, not that I am going to test this, but if I did...
     public PKGameModeImpl(InternalCommands icms) {
         this.icms = icms;
@@ -78,18 +84,21 @@ public class PKGameModeImpl implements PKGameMode{
 
         // TODO Should exit early, moved down here for dev purposes
         // IMPORTANT: Spawns should be set via commands/ command blocks in game
-        if (playerSpawns.size() == 0) {
-            icms.sendMessageAll("No Player Spawns Set, Start Up Failed");
-            return;
-        }
-        if (pkSpawns.size() == 0) {
-            icms.sendMessageAll("No Pumpkin King Spawns Set, Start Up Failed");
-            return;
-        }
-        if (lobbySpawns.size() == 0) {
-            icms.sendMessageAll("No Lobby Spawns Set, Start Up Failed");
-        }
+//        if (playerSpawns.size() == 0) {
+//            icms.sendMessageAll("No Player Spawns Set, Start Up Failed");
+//            return;
+//        }
+//        if (pkSpawns.size() == 0) {
+//            icms.sendMessageAll("No Pumpkin King Spawns Set, Start Up Failed");
+//            return;
+//        }
+//        if (lobbySpawns.size() == 0) {
+//            icms.sendMessageAll("No Lobby Spawns Set, Start Up Failed");
+//        }
 
+        // Move to countdown state
+        icms.sendMessageAll("The game will begin in "+countdownAmount+" seconds");
+        targetCountDownTime = System.currentTimeMillis()+(long)(countdownAmount*1000);
         pkState = PKState.COUNTDOWN;
     }
 
@@ -100,6 +109,7 @@ public class PKGameModeImpl implements PKGameMode{
                 // Do nothing
                 break;
             case COUNTDOWN:
+                doCountdown();
                 break;
             case LOCKED_PUMPKIN:
                 break;
@@ -108,6 +118,15 @@ public class PKGameModeImpl implements PKGameMode{
             case BOSS_BATTLE:
                 break;
         }
+    }
+
+    private void doCountdown() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime < targetCountDownTime){
+            return;
+        }
+        icms.sendMessageAll("Let the hunt begin");
+        pkState = PKState.LOCKED_PUMPKIN;
     }
 
     @Override
