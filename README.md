@@ -27,3 +27,4 @@ The Pumpkin King Map Uses The Following Mods:
 * https://www.curseforge.com/minecraft/mc-mods/codechickencore/download/3293859
 * https://www.curseforge.com/minecraft/mc-mods/notenoughitems/download/2302312
 * https://www.curseforge.com/minecraft/mc-mods/worldedit/download/2309699
+* https://www.curseforge.com/minecraft/mc-mods/chunk-loaders/download/3941255
