@@ -27,9 +27,14 @@ public class PKGameModeImpl implements PKGameMode{
     private List<String> pks;
     private List<String> crew;
 
+    // TODO Make all timings configurable
     // Countdown, amount is in seconds and is multiplied later to get milliseconds
     private final float countdownAmount = 10;
     private long targetCountDownTime;
+
+    // Pumpkin Locked / Unlocked phase
+    private final float pumpkinPlayTime = 1200; // seconds, 20 minutes
+    private long targetPumpkinPlayTime;
 
     // TODO need to add a timer for locked and unlocked pumpking, in case the players never reach the boss battle
 
@@ -110,6 +115,7 @@ public class PKGameModeImpl implements PKGameMode{
                 doCountdown();
                 break;
             case LOCKED_PUMPKIN:
+                doLockedPumpkin();
                 break;
             case UNLOCKED_PUMPKIN:
                 break;
@@ -126,11 +132,30 @@ public class PKGameModeImpl implements PKGameMode{
         icms.sendMessageAll("Let the hunt begin");
 
         spawnAllPlayers();
+
+        // move to pumpkin state
         pkState = PKState.LOCKED_PUMPKIN;
+        targetPumpkinPlayTime = System.currentTimeMillis()+(long)(pumpkinPlayTime*1000);
     }
 
-    // TODO this should be callable via a command block
-    public void SpawnInLobby() {
+    private void doLockedPumpkin() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime < targetPumpkinPlayTime){
+            return;
+        }
+
+        // If we reach here, the players never unlocked the pumpkin
+        doPKWinsGame();
+    }
+
+    private void doPKWinsGame() {
+        icms.sendMessageAll("The Pumpkin King Has Won");
+        pkState = PKState.IDLE;
+        spawnInLobby();
+        // TODO Disable pvp etc
+    }
+
+    private void spawnInLobby() {
         for (int i = 0; i < allPlayers.size(); i++) {
             icms.teleportPlayer(allPlayers.get(i), (Vector3f)getRandListItem(lobbySpawns));
         }
@@ -199,6 +224,21 @@ public class PKGameModeImpl implements PKGameMode{
                 return;
             }
         }
+    }
+
+    @Override
+    public void ResetLobbySpawn() {
+        lobbySpawns.clear();
+    }
+
+    @Override
+    public void ResetPlayerSpawn() {
+        playerSpawns.clear();
+    }
+
+    @Override
+    public void ResetPKSpawn() {
+        pkSpawns.clear();
     }
 
     // Never trust .equals, also TODO put in a util

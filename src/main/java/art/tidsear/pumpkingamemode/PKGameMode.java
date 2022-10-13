@@ -22,7 +22,9 @@ public interface PKGameMode {
     public void RemoveLobbySpawn(Vector3f pos);
     public void RemovePlayerSpawn(Vector3f pos);
     public void RemovePKSpawn(Vector3f pos);
-    public void SpawnInLobby();
+    public void ResetPKSpawn();
+    public void ResetLobbySpawn();
+    public void ResetPlayerSpawn();
 
     // TODO use set redstone block from icms, and have commands to change what positions the blocks are set to for specific events
 }

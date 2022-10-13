@@ -17,7 +17,7 @@ public class CommandPlayerSpawn extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender s) {
-        return "/playerspawn <add|remove> <x> <y> <z>";
+        return "/playerspawn <add|remove|reset> <x> <y> <z>";
     }
 
     @Override
@@ -34,8 +34,11 @@ public class CommandPlayerSpawn extends CommandBase {
                 case "remove":
                     PumpkinKingMod.pkGameMode.RemovePlayerSpawn(new Vector3f(x, y, z));
                     return;
+                case "reset":
+                    PumpkinKingMod.pkGameMode.ResetPlayerSpawn();
+                    return;
             }
-            s.addChatMessage(new ChatComponentText("Please use either add or remove"));
+            s.addChatMessage(new ChatComponentText("Please use either add, remove, or reset"));
         } catch (NumberFormatException e) {
             s.addChatMessage(new ChatComponentText("Error processing input: "+e.getMessage()));
         }

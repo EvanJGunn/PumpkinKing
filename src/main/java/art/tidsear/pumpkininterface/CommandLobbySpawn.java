@@ -17,7 +17,7 @@ public class CommandLobbySpawn extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender s) {
-        return "/lobbyspawn <add|remove> <x> <y> <z>";
+        return "/lobbyspawn <add|remove|reset> <x> <y> <z>";
     }
 
     @Override
@@ -34,8 +34,11 @@ public class CommandLobbySpawn extends CommandBase {
                 case "remove":
                     PumpkinKingMod.pkGameMode.RemoveLobbySpawn(new Vector3f(x, y, z));
                     return;
+                case "reset":
+                    PumpkinKingMod.pkGameMode.ResetLobbySpawn();
+                    return;
             }
-            s.addChatMessage(new ChatComponentText("Please use either add or remove"));
+            s.addChatMessage(new ChatComponentText("Please use either add, remove, or reset"));
         } catch (NumberFormatException e) {
             s.addChatMessage(new ChatComponentText("Error processing input: "+e.getMessage()));
         }
