@@ -15,6 +15,8 @@ public interface PKGameMode {
 
     public void Update();
 
+    public PKState getState();
+
     // TODO We should never add duplicates for spawns
     public void AddLobbySpawn(Vector3f pos);
     public void AddPlayerSpawn(Vector3f pos);

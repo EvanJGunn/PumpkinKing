@@ -29,3 +29,9 @@ The Pumpkin King Map Uses The Following Mods:
 * https://www.curseforge.com/minecraft/mc-mods/worldedit/download/2309699
 * https://www.curseforge.com/minecraft/mc-mods/dimensional-anchor-59-0-3/download
 * http://immibis.com/mcmoddl/files/immibis-core-59.1.4.jar
+
+# New Commands
+
+# New Items
+The store sign allows you to sell items to players via signs.
+/give <player> pumpkinking:store_sign

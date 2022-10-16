@@ -4,15 +4,15 @@ import art.tidsear.pumpkingamemode.PKGMTickEvent;
 import art.tidsear.pumpkingamemode.PKGameMode;
 import art.tidsear.pumpkingamemode.PKGameModeImpl;
 import art.tidsear.pumpkininterface.*;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.registry.ExistingSubstitutionException;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.command.ICommandManager;
-import net.minecraft.command.ServerCommand;
 import net.minecraft.command.ServerCommandManager;
-import net.minecraft.init.Blocks;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -31,7 +31,15 @@ public class PumpkinKingMod
     public void init(FMLInitializationEvent event)
     {
         System.out.println("Pumpkins");
-        pkGameMode = new PKGameModeImpl(new InternalCommandsImpl());
+        PumpkinKingModBlocks.RegisterBlocks();
+        PumpkinKingModItems.RegisterItems();
+
+        if (FMLCommonHandler.instance().getSide().equals(Side.SERVER)) {
+            serverStart();
+        }
+        else if (FMLCommonHandler.instance().getSide().equals(Side.CLIENT)) {
+            clientStart();
+        }
     }
 
     @EventHandler
@@ -46,5 +54,14 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandPlayerSpawn());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
+    }
+
+    @SideOnly(Side.SERVER)
+    private void serverStart() {
+        pkGameMode = new PKGameModeImpl(new InternalCommandsImpl());
+    }
+    @SideOnly(Side.CLIENT)
+    private void clientStart() {
+        // ClientRegistry.bindTileEntitySpecialRenderer(StoreSignTileEntity.class, new TileEntitySignRenderer());
     }
 }

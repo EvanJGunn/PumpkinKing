@@ -124,6 +124,11 @@ public class PKGameModeImpl implements PKGameMode{
         }
     }
 
+    @Override
+    public PKState getState() {
+        return this.pkState;
+    }
+
     private void doCountdown() {
         long currentTime = System.currentTimeMillis();
         if (currentTime < targetCountDownTime){
