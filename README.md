@@ -34,4 +34,4 @@ The Pumpkin King Map Uses The Following Mods:
 
 # New Items
 The store sign allows you to sell items to players via signs.
-/give <player> pumpkinking:store_sign
+* /give <player> pumpkinking:store_sign
