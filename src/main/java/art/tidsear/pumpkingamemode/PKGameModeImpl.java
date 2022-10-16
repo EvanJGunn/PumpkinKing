@@ -87,17 +87,18 @@ public class PKGameModeImpl implements PKGameMode{
 
         // TODO Should exit early, moved down here for dev purposes
         // IMPORTANT: Spawns should be set via commands/ command blocks in game
-//        if (playerSpawns.size() == 0) {
-//            icms.sendMessageAll("No Player Spawns Set, Start Up Failed");
-//            return;
-//        }
-//        if (pkSpawns.size() == 0) {
-//            icms.sendMessageAll("No Pumpkin King Spawns Set, Start Up Failed");
-//            return;
-//        }
-//        if (lobbySpawns.size() == 0) {
-//            icms.sendMessageAll("No Lobby Spawns Set, Start Up Failed");
-//        }
+        if (playerSpawns.size() == 0) {
+            icms.sendMessageAll("No Player Spawns Set, Start Up Failed");
+            return;
+        }
+        if (pkSpawns.size() == 0) {
+            icms.sendMessageAll("No Pumpkin King Spawns Set, Start Up Failed");
+            return;
+        }
+        if (lobbySpawns.size() == 0) {
+            icms.sendMessageAll("No Lobby Spawns Set, Start Up Failed");
+            return;
+        }
 
         // Move to countdown state
         icms.sendMessageAll("The game will begin in "+countdownAmount+" seconds");
