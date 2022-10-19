@@ -29,7 +29,7 @@ The Pumpkin King Map Uses The Following Mods:
 * https://www.curseforge.com/minecraft/mc-mods/worldedit/download/2309699
 * https://www.curseforge.com/minecraft/mc-mods/dimensional-anchor-59-0-3/download
 * http://immibis.com/mcmoddl/ -> immibis-core-59.1.4.jar (latest)
-* https://drive.google.com/file/d/1i243ng_ooaDnzTDRVC_FMzVSgpImF6xw/view?usp=sharing   <---- Pumpkinking mod 0.02
+* https://drive.google.com/file/d/1CV9Uy1xh63DBIbyv8tlYFvsr1L9JFuZh/view?usp=sharing   <---- Pumpkinking mod 0.02
 
 # New Commands
 
