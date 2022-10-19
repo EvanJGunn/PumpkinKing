@@ -1,6 +1,6 @@
 package art.tidsear.pumpkingamemode;
 
-import org.lwjgl.util.vector.Vector3f;
+import art.tidsear.utility.Vector3f;
 
 // There should be no interaction between the PKGameMode and
 // minecraft directly. Any calls to modify the minecraft state

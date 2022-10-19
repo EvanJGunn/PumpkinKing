@@ -3,7 +3,7 @@ package art.tidsear.pumpkingamemode;
 import art.tidsear.pumpkininterface.InternalCommands;
 import art.tidsear.pumpkininterface.InternalCommandsImpl;
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector3f;
+import art.tidsear.utility.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class PKGameModeImpl implements PKGameMode{
 
         randGen = new Random();
 
-        // All players is set by a command
+        // All players array is set by a command
         // allPlayers = new ArrayList<>();
         pks = new ArrayList<String>();
         crew = new ArrayList<String>();

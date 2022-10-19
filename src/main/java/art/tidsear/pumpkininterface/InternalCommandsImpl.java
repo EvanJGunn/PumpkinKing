@@ -3,7 +3,7 @@ package art.tidsear.pumpkininterface;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
-import org.lwjgl.util.vector.Vector3f;
+import art.tidsear.utility.Vector3f;
 import scala.collection.parallel.ParIterableLike;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package art.tidsear.pumpkininterface;
 
-import org.lwjgl.util.vector.Vector3f;
+import art.tidsear.utility.Vector3f;
 
 import java.util.List;
 

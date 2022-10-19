@@ -4,7 +4,7 @@ import art.tidsear.pumpkinking.PumpkinKingMod;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
-import org.lwjgl.util.vector.Vector3f;
+import art.tidsear.utility.Vector3f;
 
 // This command is basically duplicated 2 more times for other spawn types,
 // should I make it generic somehow? Maybe. But this is really a one off mod, so, going to pass.
@@ -23,15 +23,18 @@ public class CommandPKSpawn extends CommandBase {
     @Override
     public void processCommand(ICommandSender s, String[] args) {
         try {
-            float x = Float.parseFloat(args[1]);
-            float y = Float.parseFloat(args[2]);
-            float z = Float.parseFloat(args[3]);
-
+            float x,y,z;
             switch (args[0]) {
                 case "add":
+                    x = Float.parseFloat(args[1]);
+                    y = Float.parseFloat(args[2]);
+                    z = Float.parseFloat(args[3]);
                     PumpkinKingMod.pkGameMode.AddPKSpawn(new Vector3f(x, y, z));
                     return;
                 case "remove":
+                    x = Float.parseFloat(args[1]);
+                    y = Float.parseFloat(args[2]);
+                    z = Float.parseFloat(args[3]);
                     PumpkinKingMod.pkGameMode.RemovePKSpawn(new Vector3f(x, y, z));
                     return;
                 case "reset":
