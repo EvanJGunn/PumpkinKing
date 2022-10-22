@@ -23,19 +23,10 @@ The door to the pumpkin kings area opens, and the core is exposed.
 Some sort of redstone contraption needs to be used to trigger a command block that will
 move the game onto the next state.
 
-- BOSS_BATTLE
-Respawn all the players at the correct positions with full HP and freeze point generation.
-Give players time to buy in their respective shops. Move everyone to the boss arena.
-Big fight ensues, and at some point the winner is declared, either when all players are dead,
-or the PK is dead, or edge case where there is a trade between the last 2 (idk if even possible lol).
-At this point all players are tpd to the starting area, PVP is disabled, and we remain in this state
-until it is reset to INIT for a new game.
-
  */
 public enum PKState {
     IDLE,
     COUNTDOWN,
     LOCKED_PUMPKIN,
     UNLOCKED_PUMPKIN,
-    BOSS_BATTLE,
 }

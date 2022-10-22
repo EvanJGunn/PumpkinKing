@@ -41,7 +41,6 @@ public class StoreSignBlockSign extends BlockSign {
 
     @Override
     public boolean onBlockActivated(@NotNull World world, int x, int y, int z, EntityPlayer player, int handIn, float hitX, float hitY, float hitZ) {
-        System.out.println("CLICKED BLOCK");
         if (world.isRemote) {
             return true;
         }
@@ -62,6 +61,11 @@ public class StoreSignBlockSign extends BlockSign {
             player.addChatMessage(new ChatComponentText("Cost was: "+cost));
             cmdGive.processCommand(this.sender,new String[]{player.getDisplayName(), tes.signText[1]+":"+tes.signText[2]+tes.signText[3]});
         } else if (PumpkinKingMod.pkGameMode.getState() != PKState.IDLE) {
+            if (PumpkinKingMod.pkGameMode.GetPtsSystem().WithdrawPoints(player.getDisplayName(),cost)) {
+                cmdGive.processCommand(this.sender,new String[]{player.getDisplayName(), tes.signText[1]+":"+tes.signText[2]+tes.signText[3]});
+            } else {
+                player.addChatMessage(new ChatComponentText("You don't have enough points!"));
+            }
             // logic for checking / subtracting points from a player
         }
         return true;
@@ -117,7 +121,6 @@ class StoreSender implements ICommandSender {
 
     @Override
     public boolean canCommandSenderUseCommand(int p_70003_1_, String p_70003_2_) {
-        System.out.println("HI");
         return true;
     }
 

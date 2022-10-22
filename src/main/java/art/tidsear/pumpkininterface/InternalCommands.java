@@ -11,5 +11,8 @@ public interface InternalCommands {
     public void sendMessageAll(String message);
     public void teleportPlayer(String playerName, Vector3f newPos);
 
-    // TODO setRedstoneBlock
+    public void givePlayerItem(String playerName, String itemName);
+
+    public void setPlayerSpawnLocation(String playerName, Vector3f spawnLoc);
+
 }

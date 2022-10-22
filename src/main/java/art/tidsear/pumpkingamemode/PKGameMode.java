@@ -1,5 +1,6 @@
 package art.tidsear.pumpkingamemode;
 
+import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
 
 // There should be no interaction between the PKGameMode and
@@ -12,6 +13,8 @@ import art.tidsear.utility.Vector3f;
 public interface PKGameMode {
     // Do setup, reset everything, etc
     public void StartUp();
+
+    public void Reset();
 
     public void Update();
 
@@ -27,6 +30,17 @@ public interface PKGameMode {
     public void ResetPKSpawn();
     public void ResetLobbySpawn();
     public void ResetPlayerSpawn();
+
+    // Respawn a player or pk depending on their role
+    public void DoPlayerPKRespawn(String playerName);
+
+    public void DoRandomTeleportToPlayerSpawns(String playerName);
+
+    public void OnPlayerDeath(String playerName);
+    public void OnPlayerRespawn(String playerName);
+
+    // Sure this isn't too great, but hacky code in my free time an on time game makes
+    public PointsSystem GetPtsSystem();
 
     // TODO use set redstone block from icms, and have commands to change what positions the blocks are set to for specific events
 }

@@ -1,16 +1,11 @@
 package art.tidsear.pumpkinking;
 
-import art.tidsear.pumpkingamemode.PKGMTickEvent;
-import art.tidsear.pumpkingamemode.PKGameMode;
-import art.tidsear.pumpkingamemode.PKGameModeImpl;
+import art.tidsear.pumpkingamemode.*;
 import art.tidsear.pumpkininterface.*;
-import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.command.ICommandManager;
 import net.minecraft.command.ServerCommandManager;
 import cpw.mods.fml.common.Mod;
@@ -52,8 +47,12 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandLobbySpawn());
         scm.registerCommand(new CommandPKSpawn());
         scm.registerCommand(new CommandPlayerSpawn());
+        scm.registerCommand(new CommandPlayerRespawn());
+        scm.registerCommand(new CommandResetPKG());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
+        FMLCommonHandler.instance().bus().register(new PKGDeathEvent());
+        FMLCommonHandler.instance().bus().register(new PKGRespawnEvent());
     }
 
     @SideOnly(Side.SERVER)
@@ -62,6 +61,5 @@ public class PumpkinKingMod
     }
     @SideOnly(Side.CLIENT)
     private void clientStart() {
-        // ClientRegistry.bindTileEntitySpecialRenderer(StoreSignTileEntity.class, new TileEntitySignRenderer());
     }
 }

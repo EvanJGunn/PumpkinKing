@@ -1,4 +1,4 @@
-package art.tidsear.pumpkinstore;
+package art.tidsear.pumpkinteleporter;
 
 import art.tidsear.pumpkinking.PumpkinKingModBlocks;
 import net.minecraft.block.Block;
@@ -10,9 +10,9 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class StoreSignItem extends Item {
+public class RandomTeleportSignItem extends Item {
 
-    public StoreSignItem() {
+    public RandomTeleportSignItem() {
         this.maxStackSize = 16;
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
@@ -49,16 +49,17 @@ public class StoreSignItem extends Item {
 
             if (!entityPlayer.canPlayerEdit(x, y, z, facing, itemStack)) {
                 return false;
-            } else if (!PumpkinKingModBlocks.getBlock("store_standing_sign").canPlaceBlockAt(world, x, y, z)) {
+            } else if (!PumpkinKingModBlocks.getBlock("randtele_standing_sign").canPlaceBlockAt(world, x, y, z)) {
                 return false;
             } else if (world.isRemote) {
                 return true;
             } else {
                 if (facing == 1) {
                     int i1 = MathHelper.floor_double((double)((entityPlayer.rotationYaw + 180.0F) * 16.0F / 360.0F) + 0.5D) & 15;
-                    world.setBlock(x, y, z, PumpkinKingModBlocks.getBlock("pumpkinking:store_standing_sign"), i1, 3);
+                    world.setBlock(x, y, z, PumpkinKingModBlocks.getBlock("pumpkinking:randtele_standing_sign"), i1, 3);
+                    Block block = PumpkinKingModBlocks.getBlock("pumpkinking:randtele_standing_sign");
                 } else {
-                    world.setBlock(x, y, z, PumpkinKingModBlocks.getBlock("pumpkinking:store_wall_sign"), facing, 3);
+                    world.setBlock(x, y, z, PumpkinKingModBlocks.getBlock("pumpkinking:randtele_wall_sign"), facing, 3);
                 }
 
                 --itemStack.stackSize;
