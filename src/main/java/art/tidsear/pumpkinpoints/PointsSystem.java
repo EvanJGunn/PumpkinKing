@@ -12,10 +12,10 @@ public class PointsSystem {
     }
 
     public void AddPoints(String player, int points) {
-        if (playerPoints.containsKey(player)) {
-            playerPoints.put(player,playerPoints.get(player)+points);
+        if (playerPoints.containsKey(player.toLowerCase())) {
+            playerPoints.put(player.toLowerCase(),playerPoints.get(player.toLowerCase())+points);
         } else {
-            playerPoints.put(player, points);
+            playerPoints.put(player.toLowerCase(), points);
         }
     }
 
@@ -24,10 +24,14 @@ public class PointsSystem {
     }
 
     public int GetPoints(String player) {
-        if (playerPoints.containsKey(player)) {
-            return playerPoints.get(player);
+        if (playerPoints.containsKey(player.toLowerCase())) {
+            return playerPoints.get(player.toLowerCase());
         }
         return 0;
+    }
+
+    public void SetPoints(String player, int points) {
+        playerPoints.put(player.toLowerCase(), points);
     }
 
     // Returns true if you can withdraw that amount of points
@@ -35,10 +39,11 @@ public class PointsSystem {
         if (points < 0) {
             return false;
         }
-        if (playerPoints.containsKey(player)) {
-            int curPts = playerPoints.get(player);
+        if (playerPoints.containsKey(player.toLowerCase())) {
+            int curPts = playerPoints.get(player.toLowerCase());
             if (curPts >= points) {
-                playerPoints.put(player, curPts-points);
+                playerPoints.put(player.toLowerCase(), curPts-points);
+                return true;
             }
         }
         return points == 0;

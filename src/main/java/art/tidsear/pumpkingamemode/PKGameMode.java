@@ -31,6 +31,8 @@ public interface PKGameMode {
     public void ResetLobbySpawn();
     public void ResetPlayerSpawn();
 
+    public String GetPlayerRole(String playerName);
+
     // Respawn a player or pk depending on their role
     public void DoPlayerPKRespawn(String playerName);
 

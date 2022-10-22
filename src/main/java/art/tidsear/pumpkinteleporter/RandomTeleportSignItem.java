@@ -17,10 +17,6 @@ public class RandomTeleportSignItem extends Item {
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 
-    /**
-     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
-     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
-     */
     public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int facing, float hitX, float hitY, float hitZ) {
         if (facing == 0) {
             return false;

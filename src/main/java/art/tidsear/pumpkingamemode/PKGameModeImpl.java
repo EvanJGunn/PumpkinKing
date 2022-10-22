@@ -264,6 +264,17 @@ public class PKGameModeImpl implements PKGameMode{
     }
 
     @Override
+    public String GetPlayerRole(String playerName) {
+        if (pkState == PKState.IDLE) {
+           return "lobby";
+        }
+        if(pks.contains(playerName)) {
+            return "king";
+        }
+        return "crew";
+    }
+
+    @Override
     public void ResetPKSpawn() {
         pkSpawns.clear();
     }
