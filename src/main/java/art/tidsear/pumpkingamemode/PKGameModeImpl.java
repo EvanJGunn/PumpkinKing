@@ -266,12 +266,12 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public String GetPlayerRole(String playerName) {
         if (pkState == PKState.IDLE) {
-           return "lobby";
+           return "Lobby";
         }
         if(pks.contains(playerName)) {
-            return "king";
+            return "King";
         }
-        return "crew";
+        return "Crew";
     }
 
     @Override
