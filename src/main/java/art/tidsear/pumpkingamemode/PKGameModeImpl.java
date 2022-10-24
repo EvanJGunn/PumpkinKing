@@ -1,9 +1,7 @@
 package art.tidsear.pumpkingamemode;
 
 import art.tidsear.pumpkininterface.InternalCommands;
-import art.tidsear.pumpkininterface.InternalCommandsImpl;
 import art.tidsear.pumpkinpoints.PointsSystem;
-import org.lwjgl.Sys;
 import art.tidsear.utility.Vector3f;
 
 import java.util.ArrayList;
@@ -11,10 +9,8 @@ import java.util.List;
 import java.util.Random;
 
 public class PKGameModeImpl implements PKGameMode{
-    // Probably should have some sort of config or something
-    private int pkPlayerDeathAward = 25;
-
     private PKState pkState;
+    private PKConfig pkConfig;
     private InternalCommands icms;
     public PointsSystem ptsSys;
     private Random randGen;
@@ -23,8 +19,6 @@ public class PKGameModeImpl implements PKGameMode{
     private List<Vector3f> playerSpawns;
     private List<Vector3f> pkSpawns;
     private List<Vector3f> lobbySpawns;
-    private List<Vector3f> bossRoomSpawns;
-    private List<Vector3f> bossRoomPkSpawns;
 
 
     // Player lists
@@ -38,13 +32,10 @@ public class PKGameModeImpl implements PKGameMode{
     private long targetCountDownTime;
 
     // Pumpkin Locked / Unlocked phase
-    private final float pumpkinPlayTime = 1200; // seconds, 20 minutes
     private long targetPumpkinPlayTime;
 
     // Time based points awarding vars
-    // TODO
-
-    // TODO need to add a timer for locked and unlocked pumpking, in case the players never reach the boss battle
+    private long targetPumpkinAwardsTime;
 
     // Dependency injection makes testing easier, not that I am going to test this, but if I did...
     public PKGameModeImpl(InternalCommands icms) {
@@ -53,6 +44,7 @@ public class PKGameModeImpl implements PKGameMode{
 
         randGen = new Random();
         ptsSys = new PointsSystem();
+        pkConfig = new PKConfig();
 
         // All players array is set by a command
         // allPlayers = new ArrayList<>();
@@ -70,9 +62,24 @@ public class PKGameModeImpl implements PKGameMode{
     public void StartUp() {
         icms.sendMessageAll("Starting PK Game Mode");
 
+        // IMPORTANT: Spawns should be set via commands/ command blocks in game
+        if (playerSpawns.size() == 0) {
+            icms.sendMessageAll("No Player Spawns Set, Start Up Failed");
+            return;
+        }
+        if (pkSpawns.size() == 0) {
+            icms.sendMessageAll("No Pumpkin King Spawns Set, Start Up Failed");
+            return;
+        }
+        if (lobbySpawns.size() == 0) {
+            icms.sendMessageAll("No Lobby Spawns Set, Start Up Failed");
+            return;
+        }
+
         // TODO do all resets here, lists, etc
         crew.clear();
         pks.clear();
+        this.ptsSys.ResetPoints();
 
         allPlayers = icms.getServerPlayers();
         icms.sendMessageAll(String.format("Players found: %s", allPlayers.toString()));
@@ -92,21 +99,6 @@ public class PKGameModeImpl implements PKGameMode{
             if (i != pkIndex) {
                 crew.add(allPlayers.get(i));
             }
-        }
-
-        // TODO Should exit early, moved down here for dev purposes
-        // IMPORTANT: Spawns should be set via commands/ command blocks in game
-        if (playerSpawns.size() == 0) {
-            icms.sendMessageAll("No Player Spawns Set, Start Up Failed");
-            return;
-        }
-        if (pkSpawns.size() == 0) {
-            icms.sendMessageAll("No Pumpkin King Spawns Set, Start Up Failed");
-            return;
-        }
-        if (lobbySpawns.size() == 0) {
-            icms.sendMessageAll("No Lobby Spawns Set, Start Up Failed");
-            return;
         }
 
         // Move to countdown state
@@ -136,8 +128,10 @@ public class PKGameModeImpl implements PKGameMode{
                 break;
             case LOCKED_PUMPKIN:
                 doLockedPumpkin();
+                doTimeBasedPointsAwards();
                 break;
             case UNLOCKED_PUMPKIN:
+                doTimeBasedPointsAwards();
                 break;
         }
     }
@@ -145,6 +139,11 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public PKState getState() {
         return this.pkState;
+    }
+
+    @Override
+    public PKConfig getConfig() {
+        return pkConfig;
     }
 
     private void doCountdown() {
@@ -158,7 +157,8 @@ public class PKGameModeImpl implements PKGameMode{
 
         // move to pumpkin state
         pkState = PKState.LOCKED_PUMPKIN;
-        targetPumpkinPlayTime = System.currentTimeMillis()+(long)(pumpkinPlayTime*1000);
+        targetPumpkinPlayTime = System.currentTimeMillis()+(long)(pkConfig.roundTimeSeconds*1000);
+        targetPumpkinAwardsTime = System.currentTimeMillis()+(long)(pkConfig.timeBasedAwardSeconds*1000);
     }
 
     private void doLockedPumpkin() {
@@ -185,7 +185,19 @@ public class PKGameModeImpl implements PKGameMode{
     }
 
     private void doTimeBasedPointsAwards() {
-        // TODO
+        long currentTime = System.currentTimeMillis();
+        if (currentTime < targetPumpkinAwardsTime){
+            return;
+        }
+        for (int i = 0; i < crew.size(); i++) {
+            ptsSys.AddPoints(crew.get(i), pkConfig.playerTimeBasedAward);
+        }
+        for (int i = 0; i < pks.size(); i++) {
+            ptsSys.AddPoints(pks.get(i), pkConfig.pkTimeBasedAward);
+        }
+        icms.sendMessageAll(String.format("Time Based Awards! Players got %s points, PK got %s points",pkConfig.playerTimeBasedAward,pkConfig.pkTimeBasedAward));
+
+        targetPumpkinAwardsTime = System.currentTimeMillis()+(long)(pkConfig.timeBasedAwardSeconds*1000);
     }
 
     private void spawnAllPlayers() {
@@ -318,7 +330,7 @@ public class PKGameModeImpl implements PKGameMode{
         // TODO Award points based on whether the pk died or the players died
         if (!isPK) {
             for (int i = 0; i < pks.size(); i++) {
-                ptsSys.AddPoints(pks.get(i),pkPlayerDeathAward);
+                ptsSys.AddPoints(pks.get(i),pkConfig.playerDeathAward);
             }
         }
         icms.sendMessageAll("Someone has died.");

@@ -1,0 +1,25 @@
+- Cooperative Objectives
+It is very obvious how to implement an objective that only needs one player.
+It is not so obvious how to implement an objective that requires two players to complete.
+
+One idea would be to have a door open that has the objective completion sign or button or whatever, and a lava pit,
+You would need a player to stand on a pressure plate to open the door, and another player to trust them and go inside
+to do the objective. If the player holding the door open left (pk), the other player would either need to respawn by lava death,
+or by getting a third player (crew) to rescue them.
+
+That type of objective is great, and doesn't require extra work. However we also want objectives where both players need
+to activate a sign, block, or button at the same time, in order for one player to complete their objective. In this case
+we need to have a queue of events that have an expiration date.
+
+One player activates one half of an objective, and an event gets pushed to a global queue w/ a second expiration date. Another player then 1/2 second
+later activates the other half of the objective, and another event gets pushed to the global queue with a second expiration date.
+
+When an event with a second half gets pushed to the global queue, a few things will happen. First we will iterate through the queue.
+Any message past its expiration date is deleted from the queue immediately (maybe not efficient, but this is small scale mod). Any message
+that is not expired is checked to see if it is the other half. If it is, we record it and delete it from the queue. We will continue
+through the queue and delete any duplicates, as well as continuing to delete expired messages. This prevents overflow.
+
+- Cooperative Objective Links
+Objectives will be established via a set of links that are dynamically added via commands. Each link is effectively the objective
+as the name knows it, and will include two world positions, and a description. A 1 player objective only has one world position
+and a description.
