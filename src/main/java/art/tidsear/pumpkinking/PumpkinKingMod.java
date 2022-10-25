@@ -19,6 +19,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.Sys;
 
 @Mod(modid = PumpkinKingMod.MODID, version = PumpkinKingMod.VERSION)
 public class PumpkinKingMod
@@ -42,6 +43,8 @@ public class PumpkinKingMod
         PumpkinKingModBlocks.RegisterBlocks();
         PumpkinKingModItems.RegisterItems();
 
+        // I have reason to believe both functions will be called regardless?
+        // IDK not interested in understanding this nonsense as long as it works
         if (FMLCommonHandler.instance().getSide().equals(Side.SERVER)) {
             serverStart();
         }
