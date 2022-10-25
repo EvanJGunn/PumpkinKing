@@ -69,8 +69,10 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandPKGConfig());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
-        FMLCommonHandler.instance().bus().register(new PKGDeathEvent());
         FMLCommonHandler.instance().bus().register(new PKGRespawnEvent());
+
+        //FMLCommonHandler.instance().bus().register(new PKGDeathEvent());
+        MinecraftForge.EVENT_BUS.register(new PKGDeathEvent());
 
         snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         snw.registerMessage(PKServerDataMessageHandler.class, PKServerDataMessage.class, nwDiscriminator, Side.SERVER);

@@ -315,7 +315,9 @@ public class PKGameModeImpl implements PKGameMode{
             case IDLE:
             case COUNTDOWN:
                 // People shouldn't be dying here lol, but if they do...
-                icms.setPlayerSpawnLocation(playerName,(Vector3f)getRandListItem(lobbySpawns));
+                if (lobbySpawns.size() > 0) {
+                    icms.setPlayerSpawnLocation(playerName, (Vector3f) getRandListItem(lobbySpawns));
+                }
                 break;
             case LOCKED_PUMPKIN:
             case UNLOCKED_PUMPKIN:
