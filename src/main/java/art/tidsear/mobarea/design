@@ -1,0 +1,15 @@
+should have a mobarea manager that has an update function, etc
+should pass it the InternalCommands icms
+
+should have individual mob areas registered to the manager
+
+
+
+ICMS:
+spawnEntity
+spawnEntityInRadius?
+
+
+PKGameMode:
+onEntityKilled -> called from PKGDeathEvent
+

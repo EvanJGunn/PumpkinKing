@@ -1,7 +1,10 @@
 package art.tidsear.pumpkingamemode;
 
+import art.tidsear.mobarea.MobAreaManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
+
+import java.util.UUID;
 
 // There should be no interaction between the PKGameMode and
 // minecraft directly. Any calls to modify the minecraft state
@@ -42,9 +45,13 @@ public interface PKGameMode {
 
     public void OnPlayerDeath(String playerName);
     public void OnPlayerRespawn(String playerName);
+    public void OnPlayerEntityKill(String playerName, UUID uuid);
+    public void OnPlayerPlayerKill(String killer, String dead);
+    public void OnPlayerlessEntityDeath(UUID uuid);
 
     // Sure this isn't too great, but hacky code in my free time an on time game makes
     public PointsSystem GetPtsSystem();
+    public MobAreaManager GetMobAreaManager();
 
     // TODO use set redstone block from icms, and have commands to change what positions the blocks are set to for specific events
 }

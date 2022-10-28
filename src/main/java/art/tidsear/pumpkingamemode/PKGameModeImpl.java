@@ -1,5 +1,6 @@
 package art.tidsear.pumpkingamemode;
 
+import art.tidsear.mobarea.MobAreaManager;
 import art.tidsear.pumpkininterface.InternalCommands;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
@@ -7,12 +8,15 @@ import art.tidsear.utility.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class PKGameModeImpl implements PKGameMode{
     private PKState pkState;
     private PKConfig pkConfig;
     private InternalCommands icms;
-    public PointsSystem ptsSys;
+    private PointsSystem ptsSys;
+
+    private MobAreaManager mobAreaManager;
     private Random randGen;
 
     // Spawn points
@@ -45,6 +49,7 @@ public class PKGameModeImpl implements PKGameMode{
         randGen = new Random();
         ptsSys = new PointsSystem();
         pkConfig = new PKConfig();
+        mobAreaManager = new MobAreaManager(icms);
 
         // All players array is set by a command
         // allPlayers = new ArrayList<>();
@@ -101,6 +106,9 @@ public class PKGameModeImpl implements PKGameMode{
             }
         }
 
+        // Reset mob areas
+        mobAreaManager.resetMobAreas();
+
         // Move to countdown state
         icms.sendMessageAll("The game will begin in "+countdownAmount+" seconds");
         targetCountDownTime = System.currentTimeMillis()+(long)(countdownAmount*1000);
@@ -129,6 +137,7 @@ public class PKGameModeImpl implements PKGameMode{
             case LOCKED_PUMPKIN:
                 doLockedPumpkin();
                 doTimeBasedPointsAwards();
+                mobAreaManager.doUpdate();
                 break;
             case UNLOCKED_PUMPKIN:
                 doTimeBasedPointsAwards();
@@ -159,6 +168,12 @@ public class PKGameModeImpl implements PKGameMode{
         pkState = PKState.LOCKED_PUMPKIN;
         targetPumpkinPlayTime = System.currentTimeMillis()+(long)(pkConfig.roundTimeSeconds*1000);
         targetPumpkinAwardsTime = System.currentTimeMillis()+(long)(pkConfig.timeBasedAwardSeconds*1000);
+
+        // Give players starting items
+        for (String player:
+             allPlayers) {
+            givePlayerRoleBasedItems(player);
+        }
     }
 
     private void doLockedPumpkin() {
@@ -341,12 +356,54 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public void OnPlayerRespawn(String playerName) {
         // Give player items based on their role, etc
+        givePlayerRoleBasedItems(playerName);
+    }
 
+    private void givePlayerRoleBasedItems(String playerName) {
+        Boolean isPk = pks.contains(playerName);
+        if (isPk) {
+           for (String item: pkConfig.pkSpawnItems) {
+               icms.givePlayerItem(playerName, item);
+           }
+           return;
+        }
+
+        for (String item:
+             pkConfig.playerSpawnItems) {
+            icms.givePlayerItem(playerName, item);
+        }
+    }
+
+    @Override
+    public void OnPlayerEntityKill(String playerName, UUID uuid) {
+        int killAward = mobAreaManager.registerEntityDeath(uuid);
+        if (killAward > 0) {
+            ptsSys.AddPoints(playerName, killAward);
+        }
+    }
+
+    @Override
+    public void OnPlayerPlayerKill(String killer, String dead) {
+        if (pks.contains(killer) && !pks.contains(dead)) {
+            for (int i = 0; i < pks.size(); i++) {
+                ptsSys.AddPoints(pks.get(i),pkConfig.playerDeathAward);
+            }
+        }
+    }
+
+    @Override
+    public void OnPlayerlessEntityDeath(UUID uuid) {
+        mobAreaManager.registerEntityDeath(uuid);
     }
 
     @Override
     public PointsSystem GetPtsSystem() {
         return this.ptsSys;
+    }
+
+    @Override
+    public MobAreaManager GetMobAreaManager() {
+        return this.mobAreaManager;
     }
 
     // Never trust .equals, also TODO put in a util
