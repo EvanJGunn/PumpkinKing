@@ -1,0 +1,10 @@
+In Game Commands:
+
+
+
+Mob Area:
+/mobarea print
+/mobarea add areaname Zombie 100 5 20  <--- name, type, killaward, maxpop, replenishtime
+/mobarea addpos areaname 10 10 10      <--- name, x, y, z
+/mobarea removeall
+/mobarea remove areaname               <--- name

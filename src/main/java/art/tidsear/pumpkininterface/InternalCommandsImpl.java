@@ -68,7 +68,7 @@ public class InternalCommandsImpl implements InternalCommands{
             return;
         }
         if (player != null) {
-            player.setSpawnChunk(new ChunkCoordinates((int)spawnLoc.getX(),(int)spawnLoc.getY(),(int)spawnLoc.getZ()), false);
+            player.setSpawnChunk(new ChunkCoordinates((int)spawnLoc.getX(),(int)spawnLoc.getY(),(int)spawnLoc.getZ()), true);
         }
     }
 
