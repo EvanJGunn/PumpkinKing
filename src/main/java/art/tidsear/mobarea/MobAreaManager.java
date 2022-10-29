@@ -1,6 +1,7 @@
 package art.tidsear.mobarea;
 
 import art.tidsear.pumpkininterface.InternalCommands;
+import art.tidsear.utility.Vector3f;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,6 +35,10 @@ public class MobAreaManager {
         }
     }
 
+    public void addPos(String name, Vector3f pos) {
+        mobAreas.get(name).AddSpawnPos(pos);
+    }
+
     public void doUpdate() {
         mobAreas.forEach((s, mobArea) -> {
             mobArea.Update();
@@ -47,7 +52,7 @@ public class MobAreaManager {
             // javascript flashbacks
             prints.add("Name: "+s+ " "+ mobArea.print());
         });
-        return (String[]) prints.stream().toArray();
+        return prints.toArray(new String[0]);
     }
 
     public int registerEntityDeath(UUID uuid) {

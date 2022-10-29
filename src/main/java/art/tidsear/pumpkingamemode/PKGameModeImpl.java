@@ -120,6 +120,7 @@ public class PKGameModeImpl implements PKGameMode{
         pkState = PKState.IDLE;
         crew.clear();
         pks.clear();
+        mobAreaManager.resetMobAreas();
 
         spawnInLobby();
         // disable pvp etc

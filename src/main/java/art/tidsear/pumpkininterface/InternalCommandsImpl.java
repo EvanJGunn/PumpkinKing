@@ -1,11 +1,15 @@
 package art.tidsear.pumpkininterface;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import cpw.mods.fml.server.FMLServerHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandGive;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandSummon;
 import net.minecraft.command.server.CommandTeleport;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -13,6 +17,7 @@ import art.tidsear.utility.Vector3f;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+import org.lwjgl.Sys;
 import scala.collection.parallel.ParIterableLike;
 
 import java.util.ArrayList;
@@ -22,13 +27,11 @@ import java.util.UUID;
 public class InternalCommandsImpl implements InternalCommands{
     private CommandGive cmdGive;
     private CommandTeleport cmdTP;
-    private CommandSummon cmdSMN;
     private ICommandSender sender;
     public InternalCommandsImpl() {
         cmdGive = new CommandGive();
         cmdTP = new CommandTeleport();
         sender = new ICMSSender();
-        cmdSMN = new CommandSummon();
     }
 
     @Override
@@ -70,13 +73,23 @@ public class InternalCommandsImpl implements InternalCommands{
     }
 
     @Override
-    public void spawnEntity(String entityName, Vector3f pos) {
-        cmdSMN.processCommand(sender, new String[]{entityName, String.valueOf(pos.getX()), String.valueOf(pos.getY()), String.valueOf(pos.getZ())});
+    public UUID spawnEntity(String entityName, Vector3f pos) {
+        try {
+            Entity entity = EntityList.createEntityByName(entityName, FMLServerHandler.instance().getServer().getEntityWorld());
+            entity.setLocationAndAngles(pos.getX(),pos.getY(),pos.getZ(),0,0);
+            MinecraftServer.getServer().getEntityWorld().spawnEntityInWorld(entity);
+
+            return entity.getUniqueID();
+        } catch (Error e) {
+            System.out.println(e.getMessage());
+            // idk whatever man if you want to do summons wrong it aint my prob
+        }
+        return null;
     }
 
     @Override
     public void slayEntity(UUID uuid) {
-        List<Entity> entities = Minecraft.getMinecraft().theWorld.loadedEntityList;
+        List<Entity> entities = MinecraftServer.getServer().getEntityWorld().loadedEntityList;
         for (Entity e:
              entities) {
             if (e.getUniqueID() == uuid){
@@ -143,11 +156,11 @@ class ICMSSender implements ICommandSender {
 
     @Override
     public ChunkCoordinates getPlayerCoordinates() {
-        return null;
+        return new ChunkCoordinates(0,0,0);
     }
 
     @Override
     public World getEntityWorld() {
-        return null;
+        return MinecraftServer.getServer().getEntityWorld();
     }
 }

@@ -13,7 +13,7 @@ public interface InternalCommands {
     void givePlayerItem(String playerName, String itemName);
     void setPlayerSpawnLocation(String playerName, Vector3f spawnLoc);
 
-    void spawnEntity(String entityName, Vector3f pos);
+    UUID spawnEntity(String entityName, Vector3f pos);
 
     void slayEntity(UUID uuid);
 }

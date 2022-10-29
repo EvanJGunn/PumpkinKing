@@ -23,11 +23,14 @@ public class MobArea {
     public MobArea(InternalCommands icms, String mobType, int killAward, int maxPopulation, float replenishTime) {
         this.mobType = mobType;
         locations = new ArrayList<>();
+        mobs = new ArrayList<>();
 
         this.killAward = killAward;
         this.maxPopulation = maxPopulation;
         this.replenishTime = replenishTime;
         randGen = new Random();
+
+        this.icms = icms;
 
         // Set it up so that on first update it will be ready to spawn instantly
         nextSpawnTime = System.currentTimeMillis();
@@ -37,11 +40,20 @@ public class MobArea {
         if (mobs.size() < maxPopulation) {
             if (System.currentTimeMillis() > nextSpawnTime) {
                 if (locations.size() > 0) {
-                    icms.spawnEntity(mobType, (Vector3f) getRandListItem(locations));
+                    UUID uuid = icms.spawnEntity(mobType, (Vector3f) getRandListItem(locations));
+                    if (uuid != null) {
+                        mobs.add(uuid);
+                    }
                     nextSpawnTime = System.currentTimeMillis() + (long) (1000 * replenishTime);
                 }
             }
+        } else {
+            nextSpawnTime = System.currentTimeMillis() + (long) (1000 * replenishTime);
         }
+    }
+
+    public void AddSpawnPos(Vector3f pos) {
+        locations.add(pos);
     }
 
     public void Reset() {

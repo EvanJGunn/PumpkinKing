@@ -67,6 +67,7 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandResetPKG());
         scm.registerCommand(new CommandPlayerPoints());
         scm.registerCommand(new CommandPKGConfig());
+        scm.registerCommand(new CommandMobArea());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
         FMLCommonHandler.instance().bus().register(new PKGRespawnEvent());
