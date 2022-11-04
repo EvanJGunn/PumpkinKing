@@ -59,6 +59,10 @@ public interface PKGameMode {
 
     public PKConfig GetConfig();
 
+    public int GetTotalRemainingObjectives();
+
+    public int GetPlayerRemainingObjectives(String player);
+
     // TODO use set redstone block from icms, and have commands to change what positions the blocks are set to for specific events
 }
 

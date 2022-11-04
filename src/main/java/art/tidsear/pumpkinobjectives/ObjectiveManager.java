@@ -86,12 +86,17 @@ public class ObjectiveManager {
                 objectiveEvents.add(new ObjectiveEvent(objective, player, expireTime));
                 doPairObjectivesCheck();
             } else {
-                // We cant do this check earlier in case of a player helping on a paired objective
-                if (playerToObjective.get(player).equals(objective)) {
+
+                Vector3f ptoObj = playerToObjective.get(player);
+                if (ptoObj != null && ptoObj.equals(objective)) {
                     playerToObjective.remove(player);
                     // Binding this to the pkGameMode is a little sus, but I am too lazy to make this class completely
                     // independent. Up to pkGameMode to not reassign the same objective immediately after the player completes it.
-                    PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objective, player, obj.getPointsAward());
+                    try {
+                        PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objective, player, obj.getPointsAward());
+                    } catch (NullPointerException e) {
+                        // For local testing
+                    }
                 }
             }
         }
@@ -125,9 +130,13 @@ public class ObjectiveManager {
 
             // Loop again to see if there is a brother event
             for (int j = 0; j < objectiveEvents.size(); j++) {
+                // Skip events marked for the trash
+                if (oeRemovals.contains(objectiveEvents.get(j))) continue;
+
                 // Skip the current event, we know they are the same, because we do not modify the
                 // list until outside all of the loops
                 if (j == i) continue;
+
                 if (objectiveEvents.get(j).getObjective().equals(pairing)) {
                     // add both to trash
                     oeRemovals.add(objectiveEvents.get(i));
@@ -137,7 +146,13 @@ public class ObjectiveManager {
                     // should be impossible for both to have it
                     String playerA = objectiveEvents.get(i).getPlayerName();
                     String playerB = objectiveEvents.get(j).getPlayerName();
-                    if (playerToObjective.get(playerA).equals(objectiveEvents.get(i).getObjective()) || playerToObjective.get(playerA).equals(objectiveEvents.get(j).getObjective())) {
+
+                    // Each player only ever has one objective
+                    Vector3f ptoObjA = playerToObjective.get(playerA);
+                    Vector3f ptoObjB = playerToObjective.get(playerB);
+
+                    // First check if Player A has either of the objectives that were activated
+                    if (ptoObjA != null && (ptoObjA.equals(objectiveEvents.get(i).getObjective()) || ptoObjA.equals(objectiveEvents.get(j).getObjective()))) {
                         playerToObjective.remove(playerA);
                         try {
                             PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objectiveEvents.get(i).getObjective(), playerA, objectives.get(objectiveEvents.get(i).getObjective()).getPointsAward());
@@ -145,7 +160,8 @@ public class ObjectiveManager {
                             // TODO put this catch in here for solo testing purposes
                         }
                     }
-                    else if (playerToObjective.get(playerB).equals(objectiveEvents.get(i).getObjective()) || playerToObjective.get(playerB).equals(objectiveEvents.get(j).getObjective())) {
+                    // Then check if Player B had either of the objectives that were activated
+                    else if (ptoObjB != null && (ptoObjB.equals(objectiveEvents.get(i).getObjective()) || ptoObjB.equals(objectiveEvents.get(j).getObjective()))) {
                         playerToObjective.remove(playerB);
                         try {
                             PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objectiveEvents.get(i).getObjective(), playerB, objectives.get(objectiveEvents.get(i).getObjective()).getPointsAward());

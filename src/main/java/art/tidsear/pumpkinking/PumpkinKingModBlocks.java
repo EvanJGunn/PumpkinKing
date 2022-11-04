@@ -1,5 +1,6 @@
 package art.tidsear.pumpkinking;
 
+import art.tidsear.pumpkinobjectives.ObjectiveBlockSign;
 import art.tidsear.pumpkinstore.StoreSignBlockSign;
 import art.tidsear.pumpkinteleporter.RandomTeleportBlockSign;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -14,6 +15,9 @@ public class PumpkinKingModBlocks {
 
         GameRegistry.registerBlock((new RandomTeleportBlockSign(true)).setHardness(1.0F).setStepSound(soundTypeWood).setBlockName("teleport_sign"),"randtele_standing_sign");
         GameRegistry.registerBlock((new RandomTeleportBlockSign(false)).setHardness(1.0F).setStepSound(soundTypeWood).setBlockName("teleport_sign"),"randtele_wall_sign");
+
+        GameRegistry.registerBlock((new ObjectiveBlockSign(true)).setHardness(1.0F).setStepSound(soundTypeWood).setBlockName("objective_sign"),"objective_standing_sign");
+        GameRegistry.registerBlock((new ObjectiveBlockSign(false)).setHardness(1.0F).setStepSound(soundTypeWood).setBlockName("objective_sign"),"objective_wall_sign");
     }
 
     public static Block getBlock(String name){

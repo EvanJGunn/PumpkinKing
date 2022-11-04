@@ -88,7 +88,7 @@ public class PumpkinKingMod
         snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         snw.registerMessage(PKServerDataMessageHandler.class, PKServerDataMessage.class, nwDiscriminator, Side.CLIENT);
 
-        myData = new LocalData(0,"", "");
+        myData = new LocalData();
         MinecraftForge.EVENT_BUS.register(new PointsOverlay());
     }
 }

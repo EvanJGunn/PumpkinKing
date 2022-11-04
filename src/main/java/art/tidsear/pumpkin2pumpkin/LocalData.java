@@ -4,10 +4,17 @@ import java.io.Serializable;
 
 public class LocalData implements Serializable {
     public int playerPoints;
+
+    public int objectivesCount;
+    public int objectivesTotalCount;
     public String playerRole;
+
     public String objective;
-    public LocalData(int playerPoints, String playerRole, String objective) {
+
+    public LocalData(int playerPoints, int objectivesCount, int objectivesTotalCount, String playerRole, String objective) {
         this.playerPoints = playerPoints;
+        this.objectivesCount = objectivesCount;
+        this.objectivesTotalCount = objectivesTotalCount;
         this.playerRole = playerRole;
         this.objective = objective;
     }
@@ -16,6 +23,8 @@ public class LocalData implements Serializable {
         this.playerPoints = 0;
         this.playerRole = "";
         this.objective = "";
+        this.objectivesCount = 0;
+        this.objectivesTotalCount = 0;
     }
 
     public int getPlayerPoints() {
@@ -40,5 +49,21 @@ public class LocalData implements Serializable {
 
     public void setObjective(String objective) {
         this.objective = objective;
+    }
+
+    public int getObjectivesCount() {
+        return objectivesCount;
+    }
+
+    public void setObjectivesCount(int objectivesCount) {
+        this.objectivesCount = objectivesCount;
+    }
+
+    public int getObjectivesTotalCount() {
+        return objectivesTotalCount;
+    }
+
+    public void setObjectivesTotalCount(int objectivesTotalCount) {
+        this.objectivesTotalCount = objectivesTotalCount;
     }
 }

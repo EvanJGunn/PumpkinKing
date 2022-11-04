@@ -31,7 +31,11 @@ public class PointsOverlay {
             // Draw Player points in black box
             Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"Points: " + String.valueOf(PumpkinKingMod.myData.playerPoints), 15, 0+15, Color.ORANGE.getRGB());
 
-            // TODO Draw Current Objective
+            // Draw remaining objectives
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"ObjectiveTotal: " + String.valueOf(PumpkinKingMod.myData.objectivesTotalCount), 15, 0+25, Color.ORANGE.getRGB());
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"YourCount: " + String.valueOf(PumpkinKingMod.myData.objectivesCount), 15, 0+35, Color.ORANGE.getRGB());
+
+            //Draw Current Objective
             String objective = "Objective: None";
 
             if (Objects.equals(role, "King")) {
@@ -44,10 +48,9 @@ public class PointsOverlay {
                 }
             }
 
-            // Will probably want split string for Objectives
-            Minecraft.getMinecraft().fontRenderer.drawSplitString(objective, 15, 0+25, 105, Color.WHITE.getRGB());
 
-            // TODO Draw Remaining Number Of Objectives, Probably want to put this above current objective
+            // Draw objectives
+            Minecraft.getMinecraft().fontRenderer.drawSplitString(objective, 15, 0+45, 105, Color.WHITE.getRGB());
         }
 
 

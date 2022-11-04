@@ -37,7 +37,9 @@ public class PKGMTickEvent {
             if (playerObjective != null) {
                 objDesc = playerObjective.getDescription();
             }
-            LocalData playerData = new LocalData(playerPts, playerRole, objDesc);
+            int remainingTotal = PumpkinKingMod.pkGameMode.GetTotalRemainingObjectives();
+            int playerTotal = PumpkinKingMod.pkGameMode.GetPlayerRemainingObjectives(p.getDisplayName());
+            LocalData playerData = new LocalData(playerPts, playerTotal, remainingTotal, playerRole, objDesc);
             PumpkinKingMod.snw.sendTo(new PKServerDataMessage(playerData), p);
         }
     }

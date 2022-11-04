@@ -5,9 +5,11 @@ import art.tidsear.pumpkininterface.InternalCommands;
 import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class PKGameModeImpl implements PKGameMode{
     private PKState pkState;
@@ -157,6 +159,23 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public PKConfig GetConfig() {
         return pkConfig;
+    }
+
+    @Override
+    public int GetTotalRemainingObjectives() {
+        AtomicInteger i = new AtomicInteger(0);
+        remainingCrewObjectives.forEach((player, count) -> {
+            i.set(i.get()+count);
+        });
+        return i.get();
+    }
+
+    @Override
+    public int GetPlayerRemainingObjectives(String player) {
+        if (remainingCrewObjectives.containsKey(player)) {
+            return remainingCrewObjectives.get(player);
+        }
+        return 0;
     }
 
     private void doCountdown() {
@@ -440,6 +459,7 @@ public class PKGameModeImpl implements PKGameMode{
 
     @Override
     public void OnPlayerCompletesObjective(Vector3f loc, String playerName, int award) {
+        icms.sendMessageAll(EnumChatFormatting.GREEN + "An Objective Has Been Completed");
         ptsSys.AddPoints(playerName, award);
 
         int remaining = remainingCrewObjectives.get(playerName);
