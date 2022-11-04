@@ -14,6 +14,6 @@ public interface InternalCommands {
     void setPlayerSpawnLocation(String playerName, Vector3f spawnLoc);
 
     UUID spawnEntity(String entityName, Vector3f pos);
-
     void slayEntity(UUID uuid);
+    boolean isEntityLiving(UUID uuid);
 }

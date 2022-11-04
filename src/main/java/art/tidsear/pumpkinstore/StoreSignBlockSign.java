@@ -2,14 +2,10 @@ package art.tidsear.pumpkinstore;
 
 import art.tidsear.pumpkingamemode.PKState;
 import art.tidsear.pumpkinking.PumpkinKingMod;
-import art.tidsear.pumpkinking.PumpkinKingModBlocks;
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.BlockSign;
 import net.minecraft.command.CommandGive;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
@@ -17,7 +13,6 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.Sys;
 
 public class StoreSignBlockSign extends BlockSign {
 
@@ -60,7 +55,7 @@ public class StoreSignBlockSign extends BlockSign {
         if (player.capabilities.isCreativeMode) {
             player.addChatMessage(new ChatComponentText("Cost was: "+cost));
             cmdGive.processCommand(this.sender,new String[]{player.getDisplayName(), tes.signText[1]+":"+tes.signText[2]+tes.signText[3]});
-        } else if (PumpkinKingMod.pkGameMode.getState() != PKState.IDLE) {
+        } else if (PumpkinKingMod.pkGameMode.GetState() != PKState.IDLE) {
             if (PumpkinKingMod.pkGameMode.GetPtsSystem().WithdrawPoints(player.getDisplayName(),cost)) {
                 cmdGive.processCommand(this.sender,new String[]{player.getDisplayName(), tes.signText[1]+":"+tes.signText[2]+tes.signText[3]});
             } else {

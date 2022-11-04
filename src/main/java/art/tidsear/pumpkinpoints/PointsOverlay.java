@@ -23,7 +23,6 @@ public class PointsOverlay {
         int scaledWidth = event.resolution.getScaledWidth();
         String role = PumpkinKingMod.myData.playerRole;
 
-
         // Would render this all the time, but the UI is already cluttered by Decimation
         if(Minecraft.getMinecraft().gameSettings.keyBindPlayerList.getIsKeyPressed()) {
             // Draw backdrop (Specifically designed to go over decimation character overlay, unfortunately translucency might not work out bc of that)
@@ -37,8 +36,12 @@ public class PointsOverlay {
 
             if (Objects.equals(role, "King")) {
                 objective = "Objective: Protect the pumpkin core, kill humans, hinder human objectives.";
-            } else if (Objects.equals(role, "Crew")) {
-
+            } else if (Objects.equals(role, "Crew") || Objects.equals(role, "Lobby")) {
+                // TODO Added lobby here for testing/debug purposes
+                String obj = PumpkinKingMod.myData.objective;
+                if (!obj.equals("") && !obj.equals(null)) {
+                    objective = obj;
+                }
             }
 
             // Will probably want split string for Objectives
@@ -55,10 +58,10 @@ public class PointsOverlay {
         // Probably want constants or enum for this role idk
         if(Objects.equals(role, "King")) {
             roleColor = Color.RED.getRGB();
-            roleText = "You Are The Pumpkin King";
+            roleText = "Pumpkin King";
         } else if (Objects.equals(role, "Crew")) {
             roleColor = Color.GREEN.getRGB();
-            roleText = "You Are Crew";
+            roleText = "Crew";
         }
         Minecraft.getMinecraft().ingameGUI.drawCenteredString(Minecraft.getMinecraft().fontRenderer, roleText, scaledWidth/2, scaledHeight-50, roleColor);
     }

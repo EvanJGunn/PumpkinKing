@@ -3,6 +3,7 @@ package art.tidsear.pumpkingamemode;
 import art.tidsear.pumpkin2pumpkin.LocalData;
 import art.tidsear.pumpkin2pumpkin.PKServerDataMessage;
 import art.tidsear.pumpkinking.PumpkinKingMod;
+import art.tidsear.pumpkinobjectives.Objective;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -31,7 +32,12 @@ public class PKGMTickEvent {
         for (EntityPlayerMP p : playerEntities) {
             int playerPts = PumpkinKingMod.pkGameMode.GetPtsSystem().GetPoints(p.getDisplayName());
             String playerRole = PumpkinKingMod.pkGameMode.GetPlayerRole(p.getDisplayName());
-            LocalData playerData = new LocalData(playerPts, playerRole);
+            Objective playerObjective = PumpkinKingMod.pkGameMode.GetObjectiveManager().getObjective(p.getDisplayName());
+            String objDesc = "";
+            if (playerObjective != null) {
+                objDesc = playerObjective.getDescription();
+            }
+            LocalData playerData = new LocalData(playerPts, playerRole, objDesc);
             PumpkinKingMod.snw.sendTo(new PKServerDataMessage(playerData), p);
         }
     }

@@ -17,6 +17,8 @@ public class PKConfig {
     public ArrayList<String> pkSpawnItems = new ArrayList<String>();
     public ArrayList<String> randomItems = new ArrayList<String>();
 
+    public int perPlayerObjectives = 5;
+
     public String[] toStrings() {
         String[] out = new String[]{
                 "roundTimeSeconds = " + roundTimeSeconds,
@@ -26,7 +28,8 @@ public class PKConfig {
                 "playerTimeBasedAward = " + playerTimeBasedAward,
                 "playerSpawnItems = " + Arrays.toString(playerSpawnItems.toArray()),
                 "pkSpawnItems = " + Arrays.toString(pkSpawnItems.toArray()),
-                "randomItems = " + Arrays.toString(randomItems.toArray())
+                "randomItems = " + Arrays.toString(randomItems.toArray()),
+                "perPlayerObjectives = " + perPlayerObjectives
         };
         return out;
     }
@@ -49,6 +52,9 @@ public class PKConfig {
                     break;
                 case "playerTimeBasedAward":
                     this.playerTimeBasedAward = Integer.parseInt(value);
+                    break;
+                case "perPlayerObjectives":
+                    this.perPlayerObjectives = Integer.parseInt(value);
                     break;
             }
         } catch (Exception e) {

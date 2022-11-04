@@ -19,7 +19,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.Sys;
 
 @Mod(modid = PumpkinKingMod.MODID, version = PumpkinKingMod.VERSION)
 public class PumpkinKingMod
@@ -68,9 +67,10 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandPlayerPoints());
         scm.registerCommand(new CommandPKGConfig());
         scm.registerCommand(new CommandMobArea());
+        scm.registerCommand(new CommandObjective());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
-        FMLCommonHandler.instance().bus().register(new PKGRespawnEvent());
+        FMLCommonHandler.instance().bus().register(new PKGPlayerEvents());
 
         //FMLCommonHandler.instance().bus().register(new PKGDeathEvent());
         MinecraftForge.EVENT_BUS.register(new PKGDeathEvent());
@@ -88,7 +88,7 @@ public class PumpkinKingMod
         snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         snw.registerMessage(PKServerDataMessageHandler.class, PKServerDataMessage.class, nwDiscriminator, Side.CLIENT);
 
-        myData = new LocalData(0,"");
+        myData = new LocalData(0,"", "");
         MinecraftForge.EVENT_BUS.register(new PointsOverlay());
     }
 }

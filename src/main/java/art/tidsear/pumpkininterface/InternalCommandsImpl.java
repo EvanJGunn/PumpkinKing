@@ -98,6 +98,20 @@ public class InternalCommandsImpl implements InternalCommands{
         }
     }
 
+    @Override
+    public boolean isEntityLiving(UUID uuid) {
+        for (Object e:
+             MinecraftServer.getServer().getEntityWorld().loadedEntityList) {
+            Entity entity = ((Entity)e);
+            if (entity.getUniqueID() == uuid) {
+                if (entity.isEntityAlive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 //    @Override
 //    public String entityUUIDtoPlayer(UUID uuid) {
 //        List<Entity> entities = Minecraft.getMinecraft().theWorld.loadedEntityList;

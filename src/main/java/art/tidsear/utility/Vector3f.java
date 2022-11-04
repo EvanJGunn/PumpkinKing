@@ -1,5 +1,7 @@
 package art.tidsear.utility;
 
+import java.util.Objects;
+
 public class Vector3f {
     private float x;
     private float y;
@@ -39,5 +41,22 @@ public class Vector3f {
 
     public void setZ(float z) {
         this.z = z;
+    }
+
+    public String print() {
+        return "<X:"+getX()+",Y:"+getY()+",Z:"+getZ()+">";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector3f vector3f = (Vector3f) o;
+        return Float.compare(vector3f.x, x) == 0 && Float.compare(vector3f.y, y) == 0 && Float.compare(vector3f.z, z) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 }

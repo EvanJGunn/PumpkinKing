@@ -25,16 +25,16 @@ public class CommandPKGConfig extends CommandBase {
 
         switch (args[0]) {
             case "reset":
-                PumpkinKingMod.pkGameMode.getConfig().resetArrayList(args[1]);
+                PumpkinKingMod.pkGameMode.GetConfig().resetArrayList(args[1]);
                 break;
             case "set":
-                PumpkinKingMod.pkGameMode.getConfig().setValue(args[1],args[2]);
+                PumpkinKingMod.pkGameMode.GetConfig().setValue(args[1],args[2]);
                 break;
             case "add":
-                PumpkinKingMod.pkGameMode.getConfig().addValue(args[1],args[2]);
+                PumpkinKingMod.pkGameMode.GetConfig().addValue(args[1],args[2]);
                 break;
             case "print":
-                String[] prints = PumpkinKingMod.pkGameMode.getConfig().toStrings();
+                String[] prints = PumpkinKingMod.pkGameMode.GetConfig().toStrings();
                 for (int i = 0; i < prints.length; i++) {
                     s.addChatMessage(new ChatComponentText(prints[i]));
                 }

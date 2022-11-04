@@ -2,6 +2,7 @@ package art.tidsear.mobarea;
 
 import art.tidsear.pumpkininterface.InternalCommands;
 import art.tidsear.utility.Vector3f;
+import sun.awt.Mutex;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,9 @@ public class MobArea {
                 }
             }
         } else {
+            // A good optimization would be to do this every few seconds instead of every Update
+            clearUnloaded();
+
             nextSpawnTime = System.currentTimeMillis() + (long) (1000 * replenishTime);
         }
     }
@@ -64,6 +68,7 @@ public class MobArea {
         mobs.clear();
     }
 
+    // Check as in get the kill award, if this method is called, we know the mob is dead
     public int checkKilledMob(UUID uuid) {
         if (mobs.contains(uuid)) {
             mobs.remove(uuid);
@@ -72,8 +77,19 @@ public class MobArea {
         return -1;
     }
 
+    // This is not coded for large minecraft servers, etc, etc
+    private void clearUnloaded() {
+        List<UUID> removes = new ArrayList<>();
+        for (int i = 0; i < mobs.size(); i++) {
+            if (!icms.isEntityLiving(mobs.get(i))) {
+                removes.add(mobs.get(i));
+            }
+        }
+        mobs.removeAll(removes);
+    }
+
     public String print() {
-        return String.format("Mob: %s, KillAward: %s, MaxPopulation: %s, ReplenishTimeSeconds: %s", mobType, killAward, maxPopulation, replenishTime);
+        return String.format("Mob: %s, KillAward: %s, MaxPopulation: %s, ReplenishTimeSeconds: %s, MobList: %s", mobType, killAward, maxPopulation, replenishTime, mobs.toString());
     }
 
 

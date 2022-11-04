@@ -1,6 +1,7 @@
 package art.tidsear.pumpkingamemode;
 
 import art.tidsear.mobarea.MobAreaManager;
+import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
 
@@ -20,10 +21,6 @@ public interface PKGameMode {
     public void Reset();
 
     public void Update();
-
-    public PKState getState();
-
-    public PKConfig getConfig();
 
     // TODO We should never add duplicates for spawns
     public void AddLobbySpawn(Vector3f pos);
@@ -48,10 +45,19 @@ public interface PKGameMode {
     public void OnPlayerEntityKill(String playerName, UUID uuid);
     public void OnPlayerPlayerKill(String killer, String dead);
     public void OnPlayerlessEntityDeath(UUID uuid);
+    public void OnPlayerJoinGame(String playerName);
+
+    public void OnPlayerCompletesObjective(Vector3f loc, String playerName, int award);
 
     // Sure this isn't too great, but hacky code in my free time an on time game makes
     public PointsSystem GetPtsSystem();
     public MobAreaManager GetMobAreaManager();
+
+    public ObjectiveManager GetObjectiveManager();
+
+    public PKState GetState();
+
+    public PKConfig GetConfig();
 
     // TODO use set redstone block from icms, and have commands to change what positions the blocks are set to for specific events
 }

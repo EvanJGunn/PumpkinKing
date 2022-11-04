@@ -2,20 +2,19 @@ package art.tidsear.pumpkingamemode;
 
 import art.tidsear.mobarea.MobAreaManager;
 import art.tidsear.pumpkininterface.InternalCommands;
+import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PKGameModeImpl implements PKGameMode{
     private PKState pkState;
     private PKConfig pkConfig;
     private InternalCommands icms;
     private PointsSystem ptsSys;
-
+    private ObjectiveManager objManager;
     private MobAreaManager mobAreaManager;
     private Random randGen;
 
@@ -41,6 +40,8 @@ public class PKGameModeImpl implements PKGameMode{
     // Time based points awarding vars
     private long targetPumpkinAwardsTime;
 
+    private Map<String, Integer> remainingCrewObjectives;
+
     // Dependency injection makes testing easier, not that I am going to test this, but if I did...
     public PKGameModeImpl(InternalCommands icms) {
         this.icms = icms;
@@ -50,11 +51,13 @@ public class PKGameModeImpl implements PKGameMode{
         ptsSys = new PointsSystem();
         pkConfig = new PKConfig();
         mobAreaManager = new MobAreaManager(icms);
+        objManager = new ObjectiveManager();
 
         // All players array is set by a command
         // allPlayers = new ArrayList<>();
         pks = new ArrayList<String>();
         crew = new ArrayList<String>();
+        remainingCrewObjectives = new HashMap<>();
 
         playerSpawns = new ArrayList<Vector3f>();
         pkSpawns = new ArrayList<Vector3f>();
@@ -84,10 +87,12 @@ public class PKGameModeImpl implements PKGameMode{
         // TODO do all resets here, lists, etc
         crew.clear();
         pks.clear();
+        remainingCrewObjectives.clear();
         this.ptsSys.ResetPoints();
+        this.objManager.resetAssignments();
+        mobAreaManager.resetMobAreas();
 
         allPlayers = icms.getServerPlayers();
-        icms.sendMessageAll(String.format("Players found: %s", allPlayers.toString()));
 
         // TODO no proper lower bound for testing purposes, implement testing mode later?
         if (allPlayers.size() > 5 || allPlayers.size() < 0) {
@@ -96,18 +101,15 @@ public class PKGameModeImpl implements PKGameMode{
         }
 
         // TODO Make number of pk configurable, player count configurable, etc
+        // Assign roles
         int pkIndex = randGen.nextInt(allPlayers.size());
         pks.add(allPlayers.get(pkIndex));
-        icms.sendMessageAll(String.format("REMOVE ME, pk is %s", allPlayers.get(pkIndex)));
 
         for (int i = 0; i < allPlayers.size(); i++) {
             if (i != pkIndex) {
                 crew.add(allPlayers.get(i));
             }
         }
-
-        // Reset mob areas
-        mobAreaManager.resetMobAreas();
 
         // Move to countdown state
         icms.sendMessageAll("The game will begin in "+countdownAmount+" seconds");
@@ -142,17 +144,18 @@ public class PKGameModeImpl implements PKGameMode{
                 break;
             case UNLOCKED_PUMPKIN:
                 doTimeBasedPointsAwards();
+                mobAreaManager.doUpdate();
                 break;
         }
     }
 
     @Override
-    public PKState getState() {
+    public PKState GetState() {
         return this.pkState;
     }
 
     @Override
-    public PKConfig getConfig() {
+    public PKConfig GetConfig() {
         return pkConfig;
     }
 
@@ -175,16 +178,37 @@ public class PKGameModeImpl implements PKGameMode{
              allPlayers) {
             givePlayerRoleBasedItems(player);
         }
+
+        // Assign Objectives
+        assignAndSetupInitialObjectives();
     }
 
     private void doLockedPumpkin() {
         long currentTime = System.currentTimeMillis();
+
+        // Check if players have remaining objectives
+        AtomicBoolean remains = new AtomicBoolean(false);
+        remainingCrewObjectives.forEach((player, amnt) -> {
+            if (amnt > 0) {
+                remains.set(true);
+            }
+        });
+        if (!remains.get()) {
+            initialUnlockPumpkin();
+            return;
+        }
+
         if (currentTime < targetPumpkinPlayTime){
             return;
         }
 
         // If we reach here, the players never unlocked the pumpkin
         doPKWinsGame();
+    }
+
+    private void initialUnlockPumpkin() {
+        System.out.println("TODO PUMPKIN UNLOCKING");
+        pkState = PKState.UNLOCKED_PUMPKIN;
     }
 
     private void doPKWinsGame() {
@@ -230,7 +254,7 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public void AddLobbySpawn(Vector3f pos) {
         for (int i = 0; i < lobbySpawns.size(); i++) {
-            if (v3feql(lobbySpawns.get(i),pos)) return;
+            if (lobbySpawns.get(i).equals(pos)) return;
         }
         lobbySpawns.add(pos);
     }
@@ -238,7 +262,7 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public void AddPlayerSpawn(Vector3f pos) {
         for (int i = 0; i < playerSpawns.size(); i++) {
-            if (v3feql(playerSpawns.get(i),pos)) return;
+            if (playerSpawns.get(i).equals(pos)) return;
         }
         playerSpawns.add(pos);
     }
@@ -246,35 +270,38 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public void AddPKSpawn(Vector3f pos) {
         for (int i = 0; i < pkSpawns.size(); i++) {
-            if (v3feql(pkSpawns.get(i),pos)) return;
+            if (pkSpawns.get(i).equals(pos)) return;
         }
         pkSpawns.add(pos);
     }
 
+    // TODO don't remove while iterating over list
     @Override
     public void RemoveLobbySpawn(Vector3f pos) {
         for (int i = 0; i < lobbySpawns.size(); i++) {
-            if (v3feql(lobbySpawns.get(i),pos)) {
+            if (lobbySpawns.get(i).equals(pos)) {
                 lobbySpawns.remove(i);
                 return;
             }
         }
     }
 
+    // TODO don't remove while iterating over list
     @Override
     public void RemovePlayerSpawn(Vector3f pos) {
         for (int i = 0; i < playerSpawns.size(); i++) {
-            if (v3feql(playerSpawns.get(i),pos)) {
+            if (playerSpawns.get(i).equals(pos)) {
                 playerSpawns.remove(i);
                 return;
             }
         }
     }
 
+    // TODO don't remove while iterating over list
     @Override
     public void RemovePKSpawn(Vector3f pos) {
         for (int i = 0; i < pkSpawns.size(); i++) {
-            if (v3feql(pkSpawns.get(i),pos)) {
+            if (pkSpawns.get(i).equals(pos)) {
                 pkSpawns.remove(i);
                 return;
             }
@@ -398,6 +425,54 @@ public class PKGameModeImpl implements PKGameMode{
     }
 
     @Override
+    public void OnPlayerJoinGame(String playerName) {
+        // First spawn them in the lobby if there are lobby spawns
+        if (lobbySpawns.size() > 0) {
+            icms.teleportPlayer(playerName, (Vector3f)getRandListItem(lobbySpawns));
+            icms.setPlayerSpawnLocation(playerName, (Vector3f)getRandListItem(lobbySpawns));
+        }
+        // Only teleports a player if a game is in progress,
+        // AND the player was part of the game
+        // this accounts for players disconnecting accidentally
+        // - if a player is cheating, it is up to YOU (me, I am talking to myself and I) to ban them
+        DoPlayerPKRespawn(playerName);
+    }
+
+    @Override
+    public void OnPlayerCompletesObjective(Vector3f loc, String playerName, int award) {
+        ptsSys.AddPoints(playerName, award);
+
+        int remaining = remainingCrewObjectives.get(playerName);
+        if (remaining > 0) remaining -= 1;
+
+        if (remaining > 0 ) {
+            List<Vector3f> objectives = objManager.getAvailableObjectives();
+            Vector3f remove = null;
+            for(int i = 0; i < objectives.size(); i++) {
+                if (loc.equals(objectives.get(i))) {
+                    remove = objectives.get(i);
+                }
+            }
+            // Attempt to remove the last objective so we don't give the player the one they just had
+            // not sure if this works
+            objectives.remove(remove);
+            objManager.assignObjective(playerName, (Vector3f) getRandListItem(objectives));
+        }
+
+        remainingCrewObjectives.put(playerName, remaining);
+    }
+
+    private void assignAndSetupInitialObjectives() {
+        List<Vector3f> avail = objManager.getAvailableObjectives();
+        for ( int i = 0; i < crew.size(); i++) {
+            remainingCrewObjectives.put(crew.get(i),pkConfig.perPlayerObjectives);
+            Vector3f randObjective = (Vector3f) getRandListItem(avail);
+            avail.remove(randObjective);
+            objManager.assignObjective(crew.get(i), randObjective);
+        }
+    }
+
+    @Override
     public PointsSystem GetPtsSystem() {
         return this.ptsSys;
     }
@@ -407,13 +482,8 @@ public class PKGameModeImpl implements PKGameMode{
         return this.mobAreaManager;
     }
 
-    // Never trust .equals, also TODO put in a util
-    private boolean v3feql(Vector3f v1, Vector3f v2) {
-        if(v1.getX() == v2.getX()) {
-            if(v1.getZ() == v2.getZ()) {
-                return v1.getY() == v2.getY();
-            }
-        }
-        return false;
+    @Override
+    public ObjectiveManager GetObjectiveManager() {
+        return this.objManager;
     }
 }

@@ -4,11 +4,14 @@ import art.tidsear.pumpkinking.PumpkinKingMod;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 
 public class PKGDeathEvent {
+
+    @SideOnly(Side.SERVER)
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent lde) {
         // Could maybe switch on instanceof? idk never done that kind of thing

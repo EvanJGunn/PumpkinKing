@@ -24,6 +24,9 @@ public class PKServerDataMessage implements IMessage {
         // There is a magic byte of some sort on the front of the array
         // I don't know how to or care enough to find out why, let's just nuke it
         // future me says this worked out ok, so yeah
+        if (buf.array().length == 0) {
+            return;
+        }
         byte[] fixedArray = new byte[buf.array().length-1];
         for (int i = 0; i < buf.array().length; i++) {
             if (i == 0) {
@@ -45,6 +48,8 @@ public class PKServerDataMessage implements IMessage {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             System.out.println("ISSUE CONVERTING CLASS NOT FOUND");
+        } catch (Exception e) {
+            // etc
         }
     }
 
