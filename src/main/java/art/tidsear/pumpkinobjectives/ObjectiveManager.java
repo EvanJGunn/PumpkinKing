@@ -33,24 +33,29 @@ public class ObjectiveManager {
 
     // Safe to modify the return value
     public List<Vector3f> getAvailableObjectives() {
-        Vector3f[] allObjs = (Vector3f[]) objectives.keySet().toArray(new Vector3f[0]);
+        Vector3f[] allObjs = objectives.keySet().toArray(new Vector3f[0]);
         List<Vector3f> availObjs = new ArrayList<>();
-        for (int i = 0; i < allObjs.length; i++) {
-            Vector3f pairing = pairs.get(allObjs[i]);
 
-            if (!playerToObjective.containsValue(allObjs[i])) {
-                if (pairing != null) {
-                    if (playerToObjective.containsValue(pairing)){
-                        continue;
-                    }
+        // Add unassigned objectives to the list of available objectives
+        for (int i = 0; i < allObjs.length; i++) {
+            Vector3f pairing = getPairing(allObjs[i]);
+            // Skip if the pair is assigned to a player
+            if (pairing != null) {
+                if (playerToObjective.containsValue(pairing)){
+                    continue;
                 }
+            }
+            // Add if objective is unassigned
+            if (!playerToObjective.containsValue(allObjs[i])) {
                 availObjs.add(allObjs[i]);
             }
         }
+
+        // Remove one half of unassigned pairs that remain in the available objective list
         List<Vector3f> removablePairing = new ArrayList<>();
         for (int i = 0; i < availObjs.size(); i++) {
             if (removablePairing.contains(availObjs.get(i))) continue;
-            Vector3f pairing = pairs.get(availObjs.get(i));
+            Vector3f pairing = getPairing(availObjs.get(i));
             if (pairing != null) {
                 removablePairing.add(pairing);
             }
@@ -76,8 +81,8 @@ public class ObjectiveManager {
 
         if (obj != null) {
             // Probably a better way
-            if (pairs.containsKey(objective)) {
-                float expireTime = System.currentTimeMillis() + (obj.getExpirationSeconds() * 1000);
+            if (pairsContainsKey(objective)) {
+                long expireTime = System.currentTimeMillis() + (long)(obj.getExpirationSeconds() * 1000);
                 objectiveEvents.add(new ObjectiveEvent(objective, player, expireTime));
                 doPairObjectivesCheck();
             } else {
@@ -96,9 +101,8 @@ public class ObjectiveManager {
     private void doPairObjectivesCheck() {
         // This definitely might not be efficient, but I am trying to finish the game
         List<ObjectiveEvent> oeRemovals = new ArrayList<>();
-        List<String> completedObjectives = new ArrayList<>();
 
-        float currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis();
         for (int i = 0; i < objectiveEvents.size(); i++) {
             // Skip/trash if expired
             if (objectiveEvents.get(i).getExpireTime() <= currentTime) {
@@ -117,7 +121,7 @@ public class ObjectiveManager {
             if (cont) continue;
 
             // Get the pairing
-            Vector3f pairing = pairs.get(objectiveEvents.get(i).getObjective());
+            Vector3f pairing = getPairing(objectiveEvents.get(i).getObjective());
 
             // Loop again to see if there is a brother event
             for (int j = 0; j < objectiveEvents.size(); j++) {
@@ -135,15 +139,25 @@ public class ObjectiveManager {
                     String playerB = objectiveEvents.get(j).getPlayerName();
                     if (playerToObjective.get(playerA).equals(objectiveEvents.get(i).getObjective()) || playerToObjective.get(playerA).equals(objectiveEvents.get(j).getObjective())) {
                         playerToObjective.remove(playerA);
-                        PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objectiveEvents.get(i).getObjective(),playerA, objectives.get(objectiveEvents.get(i).getObjective()).getPointsAward());
+                        try {
+                            PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objectiveEvents.get(i).getObjective(), playerA, objectives.get(objectiveEvents.get(i).getObjective()).getPointsAward());
+                        } catch (Exception e) {
+                            // TODO put this catch in here for solo testing purposes
+                        }
                     }
                     else if (playerToObjective.get(playerB).equals(objectiveEvents.get(i).getObjective()) || playerToObjective.get(playerB).equals(objectiveEvents.get(j).getObjective())) {
                         playerToObjective.remove(playerB);
-                        PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objectiveEvents.get(i).getObjective(), playerB, objectives.get(objectiveEvents.get(i).getObjective()).getPointsAward());
+                        try {
+                            PumpkinKingMod.pkGameMode.OnPlayerCompletesObjective(objectiveEvents.get(i).getObjective(), playerB, objectives.get(objectiveEvents.get(i).getObjective()).getPointsAward());
+                        } catch (Exception e) {
+                            // TODO put this catch in here for solo testing purposes
+                        }
                     }
                 }
             }
         }
+
+        objectiveEvents.removeAll(oeRemovals);
     }
 
     public String[] printObjs() {
@@ -179,6 +193,23 @@ public class ObjectiveManager {
         return prints.toArray(new String[0]);
     }
 
+    // Could probably decouple from pairs, put in util or something, idk don't care enough to
+    private Vector3f getPairing(Vector3f key) {
+        Vector3f pairing = pairs.get(key);
+        if (pairing == null) {
+            pairing = pairs.inverse().get(key);
+        }
+        return pairing;
+    }
+
+    private boolean pairsContainsKey(Vector3f key) {
+        boolean check = pairs.containsKey(key);
+        if (check == false) {
+            check = pairs.inverse().containsKey(key);
+        }
+        return check;
+    }
+
     // DANGER ZONE
     // FUNCTIONS BELOW THIS LINE SHOULD NOT BE CALLED WHILE A GAME IS RUNNING
     public void deleteObjective(Vector3f loc) {
@@ -194,7 +225,7 @@ public class ObjectiveManager {
         playerToObjective.clear();
     }
 
-    public void addObjective(Vector3f loc, int pointsAward, String desc, float expirationSeconds) {
+    public void addObjective(Vector3f loc, int pointsAward, String desc, long expirationSeconds) {
         if (!objectives.containsKey(loc)) {
             objectives.put(loc, new Objective(pointsAward, desc, expirationSeconds));
         }

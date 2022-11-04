@@ -23,7 +23,7 @@ public class CommandObjective extends CommandBase {
         switch(args[0]) {
             case "add":
                 String joined = joinArgs(args, 5, args.length-2);
-                PumpkinKingMod.pkGameMode.GetObjectiveManager().addObjective(new Vector3f(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])),Integer.parseInt(args[4]), joined, Float.parseFloat(args[args.length-1]));
+                PumpkinKingMod.pkGameMode.GetObjectiveManager().addObjective(new Vector3f(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])),Integer.parseInt(args[4]), joined, Long.parseLong(args[args.length-1]));
                 break;
             case "remove":
                 PumpkinKingMod.pkGameMode.GetObjectiveManager().deleteObjective(new Vector3f(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3])));

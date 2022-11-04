@@ -5,9 +5,9 @@ import art.tidsear.utility.Vector3f;
 public class ObjectiveEvent {
     private Vector3f objective;
     private String playerName;
-    private float expireTime;
+    private long expireTime;
 
-    public ObjectiveEvent(Vector3f objective, String playerName, float expireTime) {
+    public ObjectiveEvent(Vector3f objective, String playerName, long expireTime) {
         this.objective = objective;
         this.playerName = playerName;
         this.expireTime = expireTime;
@@ -21,7 +21,7 @@ public class ObjectiveEvent {
         return playerName;
     }
 
-    public float getExpireTime() {
+    public long getExpireTime() {
         return expireTime;
     }
 }
