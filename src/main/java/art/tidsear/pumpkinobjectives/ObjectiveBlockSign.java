@@ -12,7 +12,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.Sys;
 
 import java.util.Random;
 
