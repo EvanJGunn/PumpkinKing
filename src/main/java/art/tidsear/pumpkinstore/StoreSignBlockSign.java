@@ -39,6 +39,8 @@ public class StoreSignBlockSign extends BlockSign {
         if (world.isRemote) {
             return true;
         }
+        world.playSoundEffect((double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, "random.click", 0.3F, 0.6F);
+
         TileEntitySign tes = (TileEntitySign) world.getTileEntity(x,y,z);
 
         if (tes == null) {

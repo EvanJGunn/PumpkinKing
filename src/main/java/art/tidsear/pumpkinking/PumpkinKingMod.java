@@ -6,6 +6,7 @@ import art.tidsear.pumpkin2pumpkin.PKServerDataMessageHandler;
 import art.tidsear.pumpkingamemode.*;
 import art.tidsear.pumpkininterface.*;
 import art.tidsear.pumpkinpoints.PointsOverlay;
+import art.tidsear.utility.Vector3f;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -19,6 +20,9 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Mod(modid = PumpkinKingMod.MODID, version = PumpkinKingMod.VERSION)
 public class PumpkinKingMod
@@ -34,13 +38,17 @@ public class PumpkinKingMod
 
     // Each client has state they track that is updated by the server, also probably could be implemented better somehow idk
     public static LocalData myData;
+
+    // We have a hacky way of tracking metadata for blocks for this mod
+    // Metadata may or may not be removed for a location if the block is removed so yeah its very hacky but IDC, need to get this done
+    public static Map<Vector3f, String> metadata;
     
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        System.out.println("Pumpkins");
         PumpkinKingModBlocks.RegisterBlocks();
         PumpkinKingModItems.RegisterItems();
+        metadata = new HashMap<>();
 
         // I have reason to believe both functions will be called regardless?
         // IDK not interested in understanding this nonsense as long as it works

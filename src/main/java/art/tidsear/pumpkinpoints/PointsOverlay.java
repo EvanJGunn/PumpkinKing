@@ -32,8 +32,8 @@ public class PointsOverlay {
             Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"Points: " + String.valueOf(PumpkinKingMod.myData.playerPoints), 15, 0+15, Color.ORANGE.getRGB());
 
             // Draw remaining objectives
-            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"ObjectiveTotal: " + String.valueOf(PumpkinKingMod.myData.objectivesTotalCount), 15, 0+25, Color.ORANGE.getRGB());
-            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"YourCount: " + String.valueOf(PumpkinKingMod.myData.objectivesCount), 15, 0+35, Color.ORANGE.getRGB());
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"ObjectiveTotal: " + String.valueOf(PumpkinKingMod.myData.objectivesTotalCount), 15, 0+25, Color.WHITE.getRGB());
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer,"YourCount: " + String.valueOf(PumpkinKingMod.myData.objectivesCount), 15, 0+35, Color.WHITE.getRGB());
 
             //Draw Current Objective
             String objective = "Objective: None";
