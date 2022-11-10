@@ -16,4 +16,6 @@ public interface InternalCommands {
     UUID spawnEntity(String entityName, Vector3f pos);
     void slayEntity(UUID uuid);
     boolean isEntityLiving(UUID uuid);
+
+    public void setBlock(Vector3f pos, int ID);
 }

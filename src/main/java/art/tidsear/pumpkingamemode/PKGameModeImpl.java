@@ -1,6 +1,7 @@
 package art.tidsear.pumpkingamemode;
 
 import art.tidsear.mobarea.MobAreaManager;
+import art.tidsear.pumpkindoor.PumpkinDoor;
 import art.tidsear.pumpkininterface.InternalCommands;
 import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
@@ -18,6 +19,8 @@ public class PKGameModeImpl implements PKGameMode{
     private PointsSystem ptsSys;
     private ObjectiveManager objManager;
     private MobAreaManager mobAreaManager;
+
+    private PumpkinDoor pumpkinDoor;
     private Random randGen;
 
     // Spawn points
@@ -54,6 +57,7 @@ public class PKGameModeImpl implements PKGameMode{
         pkConfig = new PKConfig();
         mobAreaManager = new MobAreaManager(icms);
         objManager = new ObjectiveManager();
+        pumpkinDoor = new PumpkinDoor(icms);
 
         // All players array is set by a command
         // allPlayers = new ArrayList<>();
@@ -93,6 +97,7 @@ public class PKGameModeImpl implements PKGameMode{
         this.ptsSys.ResetPoints();
         this.objManager.resetAssignments();
         mobAreaManager.resetMobAreas();
+        pumpkinDoor.resetDoor();
 
         allPlayers = icms.getServerPlayers();
 
@@ -125,11 +130,13 @@ public class PKGameModeImpl implements PKGameMode{
         crew.clear();
         pks.clear();
         mobAreaManager.resetMobAreas();
+        pumpkinDoor.resetDoor();
 
         spawnInLobby();
         // disable pvp etc
     }
 
+    // TODO apply pk effects
     @Override
     public void Update() {
         switch (pkState) {
@@ -145,6 +152,7 @@ public class PKGameModeImpl implements PKGameMode{
                 mobAreaManager.doUpdate();
                 break;
             case UNLOCKED_PUMPKIN:
+                doUnlockedPumpkin();
                 doTimeBasedPointsAwards();
                 mobAreaManager.doUpdate();
                 break;
@@ -176,6 +184,14 @@ public class PKGameModeImpl implements PKGameMode{
             return remainingCrewObjectives.get(player);
         }
         return 0;
+    }
+
+    @Override
+    public int GetTimeRemaining() {
+        if (pkState == PKState.IDLE || pkState == PKState.COUNTDOWN) {
+            return 0;
+        }
+        return (int)((targetPumpkinPlayTime - System.currentTimeMillis())/1000);
     }
 
     private void doCountdown() {
@@ -225,14 +241,47 @@ public class PKGameModeImpl implements PKGameMode{
         doPKWinsGame();
     }
 
+    private void doUnlockedPumpkin() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime < targetPumpkinPlayTime){
+            return;
+        }
+
+        // If we reach here, the players never unlocked the pumpkin
+        doPKWinsGame();
+    }
+
     private void initialUnlockPumpkin() {
-        System.out.println("TODO PUMPKIN UNLOCKING");
         pkState = PKState.UNLOCKED_PUMPKIN;
+        pumpkinDoor.unlockDoor();
+        icms.sendMessageAll("The Pumpkin King's Lair Has Opened! Destroy The Core!");
     }
 
     private void doPKWinsGame() {
-        icms.sendMessageAll("The Pumpkin King Has Won");
+        icms.sendMessageAll("The Pumpkin King Has Won! GG");
         Reset();
+    }
+
+    private void doPlayersWinGame() {
+        icms.sendMessageAll("The Players Have Won! GG");
+        Reset();
+    }
+
+    public void DestroyCore() {
+        if (pkState == PKState.UNLOCKED_PUMPKIN) {
+            doPlayersWinGame();
+        }
+    }
+
+    @Override
+    public boolean IsPK(String name) {
+        for (String player:
+             pks) {
+            if(player.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void spawnInLobby() {
@@ -505,5 +554,10 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public ObjectiveManager GetObjectiveManager() {
         return this.objManager;
+    }
+
+    @Override
+    public PumpkinDoor GetDoor() {
+        return this.pumpkinDoor;
     }
 }

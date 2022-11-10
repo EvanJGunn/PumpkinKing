@@ -1,8 +1,12 @@
 package art.tidsear.pumpkininterface;
 
+import art.tidsear.utility.ForgeGive;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.server.FMLServerHandler;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandGive;
 import net.minecraft.command.ICommandSender;
@@ -16,6 +20,7 @@ import net.minecraft.util.ChatComponentText;
 import art.tidsear.utility.Vector3f;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.RegistrySimple;
 import net.minecraft.world.World;
 import org.lwjgl.Sys;
 import scala.collection.parallel.ParIterableLike;
@@ -25,11 +30,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class InternalCommandsImpl implements InternalCommands{
-    private CommandGive cmdGive;
+    private ForgeGive cmdGive;
     private CommandTeleport cmdTP;
     private ICommandSender sender;
     public InternalCommandsImpl() {
-        cmdGive = new CommandGive();
+        cmdGive = new ForgeGive();
         cmdTP = new CommandTeleport();
         sender = new ICMSSender();
     }
@@ -110,6 +115,11 @@ public class InternalCommandsImpl implements InternalCommands{
             }
         }
         return false;
+    }
+
+    @Override
+    public void setBlock(Vector3f pos, int ID) {
+        MinecraftServer.getServer().getEntityWorld().setBlock((int) pos.getX(), (int) pos.getY(), (int) pos.getZ(), Block.getBlockById(ID));
     }
 
 //    @Override

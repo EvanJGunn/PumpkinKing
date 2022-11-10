@@ -2,6 +2,7 @@ package art.tidsear.pumpkinstore;
 
 import art.tidsear.pumpkingamemode.PKState;
 import art.tidsear.pumpkinking.PumpkinKingMod;
+import art.tidsear.utility.ForgeGive;
 import net.minecraft.block.BlockSign;
 import net.minecraft.command.CommandGive;
 import net.minecraft.command.ICommandSender;
@@ -17,10 +18,10 @@ import org.jetbrains.annotations.NotNull;
 public class StoreSignBlockSign extends BlockSign {
 
     private ICommandSender sender;
-    private CommandGive cmdGive;
+    private ForgeGive cmdGive;
     public StoreSignBlockSign(boolean onGround) {
         super(TileEntitySign.class, onGround);
-        cmdGive = new CommandGive();
+        cmdGive = new ForgeGive();
         sender = new StoreSender();
     }
 

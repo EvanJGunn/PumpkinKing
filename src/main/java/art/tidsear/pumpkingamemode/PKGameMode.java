@@ -1,6 +1,7 @@
 package art.tidsear.pumpkingamemode;
 
 import art.tidsear.mobarea.MobAreaManager;
+import art.tidsear.pumpkindoor.PumpkinDoor;
 import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
@@ -55,6 +56,8 @@ public interface PKGameMode {
 
     public ObjectiveManager GetObjectiveManager();
 
+    public PumpkinDoor GetDoor();
+
     public PKState GetState();
 
     public PKConfig GetConfig();
@@ -62,6 +65,12 @@ public interface PKGameMode {
     public int GetTotalRemainingObjectives();
 
     public int GetPlayerRemainingObjectives(String player);
+
+    public int GetTimeRemaining();
+
+    public void DestroyCore();
+
+    public boolean IsPK(String name);
 
     // TODO use set redstone block from icms, and have commands to change what positions the blocks are set to for specific events
 }

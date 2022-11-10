@@ -44,7 +44,7 @@ public class PointsOverlay {
                 // TODO Added lobby here for testing/debug purposes
                 String obj = PumpkinKingMod.myData.objective;
                 if (!obj.equals("") && !obj.equals(null)) {
-                    objective = obj;
+                    objective = "Objective: " + obj;
                 }
             }
 
@@ -67,5 +67,29 @@ public class PointsOverlay {
             roleText = "Crew";
         }
         Minecraft.getMinecraft().ingameGUI.drawCenteredString(Minecraft.getMinecraft().fontRenderer, roleText, scaledWidth/2, scaledHeight-50, roleColor);
+
+        // Draw effect Letters
+        if(Objects.equals(role, "King")) {
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer, "JMP", (scaledWidth/2) - 90, scaledHeight-30, Color.WHITE.getRGB());
+
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer, "RGN", (scaledWidth/2) - 70, scaledHeight-30, Color.WHITE.getRGB());
+
+            Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer, "RES", (scaledWidth/2) - 50, scaledHeight-30, Color.WHITE.getRGB());
+        }
+
+        // Draw time remaining
+        Minecraft.getMinecraft().ingameGUI.drawString(Minecraft.getMinecraft().fontRenderer, "Apotheosis >"+convertSecondToTime(PumpkinKingMod.myData.timeRemaining), 10,scaledHeight-20,Color.ORANGE.getRGB());
+    }
+
+    private String convertSecondToTime(int seconds) {
+        int remainderSeconds = seconds % 60;
+        int minutes = seconds / 60; // java rounds down
+
+        String remainderStr = String.valueOf(remainderSeconds);
+        if (remainderSeconds < 10) {
+            remainderStr = "0"+remainderStr;
+        }
+
+        return String.format("%s:%s",String.valueOf(minutes),remainderStr);
     }
 }

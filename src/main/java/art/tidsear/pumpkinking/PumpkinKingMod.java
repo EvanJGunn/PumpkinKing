@@ -76,12 +76,15 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandPKGConfig());
         scm.registerCommand(new CommandMobArea());
         scm.registerCommand(new CommandObjective());
+        scm.registerCommand(new CommandPKDoor());
+        scm.registerCommand(new CommandDestroyCore());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
         FMLCommonHandler.instance().bus().register(new PKGPlayerEvents());
 
         //FMLCommonHandler.instance().bus().register(new PKGDeathEvent());
         MinecraftForge.EVENT_BUS.register(new PKGDeathEvent());
+        MinecraftForge.EVENT_BUS.register(new PKGFallEvent());
 
         snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
         snw.registerMessage(PKServerDataMessageHandler.class, PKServerDataMessage.class, nwDiscriminator, Side.SERVER);
