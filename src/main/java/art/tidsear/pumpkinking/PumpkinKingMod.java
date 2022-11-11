@@ -78,6 +78,7 @@ public class PumpkinKingMod
         scm.registerCommand(new CommandObjective());
         scm.registerCommand(new CommandPKDoor());
         scm.registerCommand(new CommandDestroyCore());
+        scm.registerCommand(new CommandPKShop());
 
         FMLCommonHandler.instance().bus().register(new PKGMTickEvent());
         FMLCommonHandler.instance().bus().register(new PKGPlayerEvents());

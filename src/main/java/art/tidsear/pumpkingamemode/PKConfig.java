@@ -6,6 +6,7 @@ import java.util.Arrays;
 // We don't have a pkDeathAward because A. it would be a test, B. we want to have players focus on objectives
 // C. we want the pk to be scary, and we don't want the players to snowball exclusively off of killing the pk
 public class PKConfig {
+    public float shopUnlockSeconds = 300; // default 5 minutes
     public float roundTimeSeconds = 1200; // default 20 minutes
     public int playerDeathAward = 25;
 
@@ -29,7 +30,8 @@ public class PKConfig {
                 "playerSpawnItems = " + Arrays.toString(playerSpawnItems.toArray()),
                 "pkSpawnItems = " + Arrays.toString(pkSpawnItems.toArray()),
                 "randomItems = " + Arrays.toString(randomItems.toArray()),
-                "perPlayerObjectives = " + perPlayerObjectives
+                "perPlayerObjectives = " + perPlayerObjectives,
+                "shopUnlockSeconds = " + shopUnlockSeconds
         };
         return out;
     }
@@ -55,6 +57,9 @@ public class PKConfig {
                     break;
                 case "perPlayerObjectives":
                     this.perPlayerObjectives = Integer.parseInt(value);
+                    break;
+                case "shopUnlockSeconds":
+                    this.shopUnlockSeconds = Integer.parseInt(value);
                     break;
             }
         } catch (Exception e) {

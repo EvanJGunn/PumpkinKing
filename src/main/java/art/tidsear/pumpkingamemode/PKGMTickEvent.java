@@ -69,7 +69,7 @@ public class PKGMTickEvent {
             if (PumpkinKingMod.pkGameMode.GetState() != PKState.COUNTDOWN && PumpkinKingMod.pkGameMode.IsPK(p.getDisplayName())) {
                 // Jump & Speed
                 if (p.inventory.currentItem == 0) {
-                    p.addPotionEffect(new PotionEffect(8, 10, 7, true));
+                    p.addPotionEffect(new PotionEffect(8, 10, 5, true));
                     p.addPotionEffect(new PotionEffect(1, 10, 3, true));
                 }
                 // Regen

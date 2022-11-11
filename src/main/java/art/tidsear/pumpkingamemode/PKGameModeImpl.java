@@ -2,6 +2,7 @@ package art.tidsear.pumpkingamemode;
 
 import art.tidsear.mobarea.MobAreaManager;
 import art.tidsear.pumpkindoor.PumpkinDoor;
+import art.tidsear.pumpkindoor.PumpkinShop;
 import art.tidsear.pumpkininterface.InternalCommands;
 import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
@@ -21,6 +22,8 @@ public class PKGameModeImpl implements PKGameMode{
     private MobAreaManager mobAreaManager;
 
     private PumpkinDoor pumpkinDoor;
+
+    private PumpkinShop pumpkinShop;
     private Random randGen;
 
     // Spawn points
@@ -45,6 +48,10 @@ public class PKGameModeImpl implements PKGameMode{
     // Time based points awarding vars
     private long targetPumpkinAwardsTime;
 
+    // Time based shop unlock
+    private long targetShopUnlockTime;
+    private boolean unlockedShop = false;
+
     private Map<String, Integer> remainingCrewObjectives;
 
     // Dependency injection makes testing easier, not that I am going to test this, but if I did...
@@ -58,6 +65,7 @@ public class PKGameModeImpl implements PKGameMode{
         mobAreaManager = new MobAreaManager(icms);
         objManager = new ObjectiveManager();
         pumpkinDoor = new PumpkinDoor(icms);
+        pumpkinShop = new PumpkinShop(icms);
 
         // All players array is set by a command
         // allPlayers = new ArrayList<>();
@@ -98,6 +106,8 @@ public class PKGameModeImpl implements PKGameMode{
         this.objManager.resetAssignments();
         mobAreaManager.resetMobAreas();
         pumpkinDoor.resetDoor();
+        pumpkinShop.resetDoor();
+        unlockedShop = false;
 
         allPlayers = icms.getServerPlayers();
 
@@ -131,6 +141,7 @@ public class PKGameModeImpl implements PKGameMode{
         pks.clear();
         mobAreaManager.resetMobAreas();
         pumpkinDoor.resetDoor();
+        pumpkinShop.resetDoor();
 
         spawnInLobby();
         // disable pvp etc
@@ -147,11 +158,13 @@ public class PKGameModeImpl implements PKGameMode{
                 doCountdown();
                 break;
             case LOCKED_PUMPKIN:
+                doPumpkinShopCheck();
                 doLockedPumpkin();
                 doTimeBasedPointsAwards();
                 mobAreaManager.doUpdate();
                 break;
             case UNLOCKED_PUMPKIN:
+                doPumpkinShopCheck();
                 doUnlockedPumpkin();
                 doTimeBasedPointsAwards();
                 mobAreaManager.doUpdate();
@@ -207,6 +220,7 @@ public class PKGameModeImpl implements PKGameMode{
         pkState = PKState.LOCKED_PUMPKIN;
         targetPumpkinPlayTime = System.currentTimeMillis()+(long)(pkConfig.roundTimeSeconds*1000);
         targetPumpkinAwardsTime = System.currentTimeMillis()+(long)(pkConfig.timeBasedAwardSeconds*1000);
+        targetShopUnlockTime = System.currentTimeMillis()+(long)(pkConfig.shopUnlockSeconds*1000);
 
         // Give players starting items
         for (String player:
@@ -255,6 +269,15 @@ public class PKGameModeImpl implements PKGameMode{
         pkState = PKState.UNLOCKED_PUMPKIN;
         pumpkinDoor.unlockDoor();
         icms.sendMessageAll("The Pumpkin King's Lair Has Opened! Destroy The Core!");
+    }
+
+    private void doPumpkinShopCheck() {
+        if (System.currentTimeMillis() < targetShopUnlockTime || unlockedShop) {
+            return;
+        }
+        unlockedShop = true;
+        pumpkinShop.unlockDoor();
+        icms.sendMessageAll("The Maw Of The Pumpkin Has Opened To The King");
     }
 
     private void doPKWinsGame() {
@@ -559,5 +582,10 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public PumpkinDoor GetDoor() {
         return this.pumpkinDoor;
+    }
+
+    @Override
+    public PumpkinShop GetShop() {
+        return this.pumpkinShop;
     }
 }

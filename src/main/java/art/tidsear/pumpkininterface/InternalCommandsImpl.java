@@ -22,6 +22,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.RegistrySimple;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
 import org.lwjgl.Sys;
 import scala.collection.parallel.ParIterableLike;
 
@@ -62,7 +63,27 @@ public class InternalCommandsImpl implements InternalCommands{
 
     @Override
     public void givePlayerItem(String playerName, String itemName) {
-        cmdGive.processCommand(this.sender,new String[]{playerName, itemName});
+        List<EntityPlayerMP> playerEntities = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+        EntityPlayerMP player = null;
+        for (EntityPlayerMP p : playerEntities) {
+            if (p.getDisplayName().equals(playerName)) {
+                player = p;
+            }
+        }
+
+        // Jank, probably exploitable
+        // Fixes and issue with Decimation where /give items are dropped, which is just too annoying to leave in
+        // Theorizing decimation uses different inventories for creative and survival somehow?
+        if (player != null) {
+            boolean playerWasCreative = player.capabilities.isCreativeMode;
+            player.setGameType(WorldSettings.GameType.CREATIVE);
+
+            cmdGive.processCommand(this.sender,new String[]{playerName, itemName});
+
+            if (!playerWasCreative) {
+                player.setGameType(WorldSettings.GameType.SURVIVAL);
+            }
+        }
     }
 
     @Override

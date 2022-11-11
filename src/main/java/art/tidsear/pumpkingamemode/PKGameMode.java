@@ -2,6 +2,7 @@ package art.tidsear.pumpkingamemode;
 
 import art.tidsear.mobarea.MobAreaManager;
 import art.tidsear.pumpkindoor.PumpkinDoor;
+import art.tidsear.pumpkindoor.PumpkinShop;
 import art.tidsear.pumpkinobjectives.ObjectiveManager;
 import art.tidsear.pumpkinpoints.PointsSystem;
 import art.tidsear.utility.Vector3f;
@@ -57,6 +58,8 @@ public interface PKGameMode {
     public ObjectiveManager GetObjectiveManager();
 
     public PumpkinDoor GetDoor();
+
+    public PumpkinShop GetShop();
 
     public PKState GetState();
 
