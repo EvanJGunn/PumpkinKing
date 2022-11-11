@@ -428,7 +428,11 @@ public class PKGameModeImpl implements PKGameMode{
     @Override
     public void DoPlayerPKRespawn(String playerName) {
         if (pks.contains(playerName)) {
-            icms.teleportPlayer(playerName, (Vector3f)getRandListItem(pkSpawns));
+            if (unlockedShop) {
+                icms.teleportPlayer(playerName, (Vector3f)getRandListItem(pkSpawns));
+            } else {
+                icms.teleportPlayer(playerName, (Vector3f)getRandListItem(playerSpawns));
+            }
         } else if (crew.contains(playerName)) {
             icms.teleportPlayer(playerName, (Vector3f)getRandListItem(playerSpawns));
         }
@@ -469,7 +473,6 @@ public class PKGameModeImpl implements PKGameMode{
                 ptsSys.AddPoints(pks.get(i),pkConfig.playerDeathAward);
             }
         }
-        icms.sendMessageAll("Someone has died.");
     }
 
     @Override
