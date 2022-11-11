@@ -460,7 +460,11 @@ public class PKGameModeImpl implements PKGameMode{
             case LOCKED_PUMPKIN:
             case UNLOCKED_PUMPKIN:
                 if (isPK) {
-                    icms.setPlayerSpawnLocation(playerName,(Vector3f)getRandListItem(pkSpawns));
+                    if (unlockedShop) {
+                        icms.setPlayerSpawnLocation(playerName, (Vector3f) getRandListItem(pkSpawns));
+                    } else {
+                        icms.setPlayerSpawnLocation(playerName,(Vector3f)getRandListItem(playerSpawns));
+                    }
                 } else {
                     icms.setPlayerSpawnLocation(playerName,(Vector3f)getRandListItem(playerSpawns));
                 }
