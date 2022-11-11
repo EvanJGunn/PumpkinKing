@@ -71,9 +71,17 @@ public class ForgeGive extends CommandBase {
                 }
             }
 
-            EntityItem entityitem = entityplayermp.dropPlayerItemWithRandomChoice(itemstack, false);
-            entityitem.delayBeforeCanPickup = 0;
-            entityitem.func_145797_a(entityplayermp.getCommandSenderName());
+            int slot = findOpenInventorySlot(entityplayermp);
+
+            if (slot == -1) {
+                EntityItem entityitem = entityplayermp.dropPlayerItemWithRandomChoice(itemstack, false);
+                //entityitem.delayBeforeCanPickup = 0;
+                //entityitem.func_145797_a(entityplayermp.getCommandSenderName());
+            } else {
+                entityplayermp.inventory.setInventorySlotContents(slot, itemstack);
+                entityplayermp.inventoryContainer.detectAndSendChanges();
+            }
+
             func_152373_a(p_71515_1_, this, "commands.give.success", new Object[] {itemstack.func_151000_E(), Integer.valueOf(i), entityplayermp.getCommandSenderName()});
         }
     }
@@ -94,5 +102,15 @@ public class ForgeGive extends CommandBase {
      */
     public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
         return p_82358_2_ == 0;
+    }
+
+    private int findOpenInventorySlot(EntityPlayerMP player) {
+        int max = 36; // slots start at 0, so actually 0 -> 35
+        for (int i = 0; i < max; i ++) {
+            if (player.inventory.getStackInSlot(i) == null) {
+                return i;
+            }
+        }
+        return -1;
     }
 }

@@ -61,9 +61,7 @@ public class StoreSignBlockSign extends BlockSign {
             cmdGive.processCommand(this.sender,new String[]{player.getDisplayName(), tes.signText[1]+":"+tes.signText[2]+tes.signText[3]});
         } else if (PumpkinKingMod.pkGameMode.GetState() != PKState.IDLE) {
             if (PumpkinKingMod.pkGameMode.GetPtsSystem().WithdrawPoints(player.getDisplayName(),cost)) {
-                player.setGameType(WorldSettings.GameType.CREATIVE);
                 cmdGive.processCommand(this.sender,new String[]{player.getDisplayName(), tes.signText[1]+":"+tes.signText[2]+tes.signText[3]});
-                player.setGameType(WorldSettings.GameType.SURVIVAL);
             } else {
                 player.addChatMessage(new ChatComponentText("You don't have enough points!"));
             }
