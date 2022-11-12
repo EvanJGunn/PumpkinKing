@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 
-// Trying to see if using this command instead will override whatever decimation did to the give command
+// Probably unnecessary class here, too lazy to pull it out
 public class ForgeGive extends CommandBase {
     private static final String __OBFID = "CL_00000502";
 
